@@ -7,7 +7,7 @@ emp-pollo | 1500 | SI | https://images.unsplash.com/photo-1565299585323-38d6b086
 emp-humita | 1500 | no | https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80
 docena-surtida | 16500 | SI | https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80
 
-pizza-muzza | 5500 | no | pizza.jpg
+pizza-muzza | 6500 | no | pizza.jpg
 pizza-napo | 13200 | SI | https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?auto=format&fit=crop&w=600&q=80
 pizza-fugazzeta | 15800 | SI | https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80
 combo-familiar | 18500 | SI | https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80
