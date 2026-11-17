@@ -1,298 +1,144 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Del Hornito - Rotisería y Delivery</title>
+    <title>DEL HORNITO | Casa de Comidas, Rotisería & Pizzas al Horno</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,800;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Fraunces', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        horno: {
+                            cream: '#FDF8F2',
+                            sand: '#F5EBE0',
+                            terracotta: '#C84B31',
+                            terracottaDark: '#A33821',
+                            amber: '#E07A22',
+                            charcoal: '#1E1A18',
+                            wood: '#3A2A22',
+                            olive: '#4A5D23'
+                        }
+                    },
+                    boxShadow: {
+                        'warm': '0 10px 30px -10px rgba(58, 42, 34, 0.15)',
+                        'glow': '0 0 25px rgba(224, 122, 34, 0.35)',
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        body { font-family: 'Poppins', sans-serif; }
+        body { background-color: #FDF8F2; color: #1E1A18; overflow-x: hidden; }
+        .hero-gradient { background: linear-gradient(135deg, rgba(30, 26, 24, 0.92) 0%, rgba(58, 42, 34, 0.85) 55%, rgba(200, 75, 49, 0.75) 100%); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.45s ease-out forwards; }
     </style>
 </head>
-<body class="bg-amber-50 text-neutral-800">
+<body class="font-sans antialiased selection:bg-horno-terracotta selection:text-white">
 
-    <!-- Header -->
-    <header class="bg-amber-900 text-amber-50 py-6 px-4 shadow-md sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto flex justify-between items-center">
-            <div>
-                <h1 class="text-2xl font-bold tracking-wider">🔥 EL HORNITO 🔥</h1>
-                <p class="text-xs text-amber-200">Rotisería & Tradición</p>
+    <!-- BARRA DE NAVEGACIÓN -->
+    <header class="sticky top-0 z-40 bg-horno-cream/95 backdrop-blur-md border-b border-horno-wood/10 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="#inicio" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-horno-terracotta to-horno-amber flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 20h18"/><path d="M5 20v-7a7 7 0 0 1 14 0v7"/><path d="M9 20v-4a3 3 0 0 1 6 0v4"/><path d="M12 3c.5 1.5 2 2.5 2 4a2 2 0 1 1-4 0c0-1.5 1.5-2.5 2-4Z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="font-display font-extrabold text-xl sm:text-2xl tracking-tight text-horno-charcoal block leading-none">DEL HORNITO</span>
+                        <span class="text-[11px] font-semibold uppercase tracking-widest text-horno-terracotta">Casa de Comidas</span>
+                    </div>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-horno-wood">
+                    <a href="#inicio" class="hover:text-horno-terracotta transition-colors">Inicio</a>
+                    <a href="#especialidades" class="hover:text-horno-terracotta transition-colors">Especialidades</a>
+                    <a href="#menu" class="hover:text-horno-terracotta transition-colors">Menú</a>
+                    <a href="#nosotros" class="hover:text-horno-terracotta transition-colors">Nuestra Cocina</a>
+                    <a href="#contacto" class="hover:text-horno-terracotta transition-colors">Horarios y Ubicación</a>
+                </nav>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleCart(true)" aria-label="Abrir carrito"
+                        class="relative flex items-center gap-2.5 bg-horno-charcoal hover:bg-horno-wood text-white px-4 py-2.5 rounded-2xl font-semibold text-sm shadow-md transition-all active:scale-95">
+                        <i data-lucide="shopping-bag" class="w-4 h-4 text-horno-amber"></i>
+                        <span class="hidden sm:inline">Tu Pedido</span>
+                        <span id="cart-badge" class="bg-horno-terracotta text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[22px] text-center">0</span>
+                    </button>
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Abrir menú"
+                        class="md:hidden p-2.5 rounded-xl bg-horno-sand text-horno-charcoal hover:bg-horno-terracotta/15 transition-colors">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
             </div>
-            <button onclick="toggleCarritoModal()" class="bg-amber-600 hover:bg-amber-700 text-white px-4 py-2 rounded-lg font-medium shadow transition flex items-center gap-2">
-                🛒 Carrito (<span id="contador-carrito">0</span>)
-            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-horno-cream border-b border-horno-wood/10 px-4 pt-2 pb-5 space-y-2">
+            <a href="#inicio" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl font-semibold text-horno-charcoal hover:bg-horno-sand">Inicio</a>
+            <a href="#especialidades" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl font-semibold text-horno-charcoal hover:bg-horno-sand">Especialidades</a>
+            <a href="#menu" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl font-semibold text-horno-charcoal hover:bg-horno-sand">Menú Completo</a>
+            <a href="#nosotros" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl font-semibold text-horno-charcoal hover:bg-horno-sand">Nuestra Cocina</a>
+            <a href="#contacto" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl font-semibold text-horno-charcoal hover:bg-horno-sand">Horarios y Ubicación</a>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-6xl mx-auto px-4 py-8">
-        <div class="text-center mb-10">
-            <h2 class="text-3xl font-bold text-amber-900 mb-2">Nuestro Menú</h2>
-            <p class="text-neutral-600">Elegí tus platos favoritos y hacé tu pedido al instante.</p>
+    <!-- SECCIÓN HERO -->
+    <section id="inicio" class="relative overflow-hidden bg-horno-charcoal text-white">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1800&q=80" 
+                 alt="Fondo horno" class="w-full h-full object-cover object-center opacity-45 scale-105">
+            <div class="absolute inset-0 hero-gradient"></div>
         </div>
 
-        <!-- Grid de Productos -->
-        <div id="menu-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <!-- Los productos se cargan dinámicamente desde precios.txt -->
-        </div>
-    </main>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-horno-amber/20 border border-horno-amber/40 text-horno-amber text-xs sm:text-sm font-semibold tracking-wide">
+                        <span class="w-2 h-2 rounded-full bg-horno-amber animate-ping"></span>
+                        <span>Horno encendido • Mediodía y Noche</span>
+                    </div>
 
-    <!-- Modal del Carrito / Checkout -->
-    <div id="carrito-modal" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4 border-b pb-3">
-                <h3 class="text-xl font-bold text-amber-900">Tu Pedido</h3>
-                <button onclick="toggleCarritoModal()" class="text-neutral-400 hover:text-neutral-700 font-bold text-xl">&times;</button>
-            </div>
+                    <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.1] tracking-tight text-horno-cream">
+                        El sabor casero <span class="text-horno-amber italic">recién salido</span> del horno.
+                    </h1>
 
-            <!-- Lista de items en el carrito -->
-            <div id="carrito-items" class="divide-y divide-neutral-100 mb-4 max-h-48 overflow-y-auto">
-                <!-- Se llena con JS -->
-            </div>
+                    <p class="text-base sm:text-lg text-horno-sand/90 max-w-xl leading-relaxed">
+                        Empanadas jugosas cortadas a cuchillo, pizzas a la piedra con muzzarella abundante, pollos dorados al spiedo y las pastas de los domingos. Como hecho en casa, pero sin que tengas que cocinar.
+                    </p>
 
-            <div class="border-t pt-4 space-y-3">
-                <div>
-                    <label class="block text-xs font-semibold text-neutral-600 mb-1">Nombre y Apellido</label>
-                    <input type="text" id="cliente-nombre" placeholder="Ej: Juan Pérez" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <a href="#menu" class="inline-flex items-center justify-center gap-2 bg-horno-terracotta hover:bg-horno-terracottaDark text-white font-bold px-7 py-4 rounded-2xl shadow-glow transition-all hover:-translate-y-0.5">
+                            <i data-lucide="utensils" class="w-5 h-5"></i><span>Ver Menú</span>
+                        </a>
+                        <button onclick="toggleCart(true)" class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/25 text-white font-bold px-7 py-4 rounded-2xl transition-all">
+                            <i data-lucide="flame" class="w-5 h-5 text-horno-amber"></i><span>Hacer Pedido</span>
+                        </button>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-xs font-semibold text-neutral-600 mb-1">Modalidad de entrega</label>
-                    <select id="cliente-modalidad" onchange="actualizarTotales()" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
-                        <option value="Delivery a domicilio">Delivery a domicilio ($1.500)</option>
-                        <option value="Retira en el local">Retira en el local (Sin cargo)</option>
-                    </select>
-                </div>
-
-                <div id="campo-direccion">
-                    <label class="block text-xs font-semibold text-neutral-600 mb-1">Dirección de entrega</label>
-                    <input type="text" id="cliente-direccion" placeholder="Ej: Alvear 124" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
-                </div>
-
-                <div>
-                    <label class="block text-xs font-semibold text-neutral-600 mb-1">Forma de pago</label>
-                    <select id="cliente-pago" class="w-full border rounded-lg p-2 text-sm focus:ring-2 focus:ring-amber-500 outline-none">
-                        <option value="Efectivo">Efectivo</option>
-                        <option value="Transferencia Bancaria">Transferencia Bancaria</option>
-                        <option value="Mercado Pago">Mercado Pago</option>
-                    </select>
-                </div>
-
-                <div class="bg-amber-50 p-3 rounded-xl space-y-1 text-sm">
-                    <div class="flex justify-between"><span>Subtotal:</span><span id="modal-subtotal">$0</span></div>
-                    <div class="flex justify-between"><span>Envío:</span><span id="modal-envio">$1.500</span></div>
-                    <div class="flex justify-between font-bold text-amber-900 text-base border-t pt-1"><span>Total:</span><span id="modal-total">$0</span></div>
-                </div>
-
-                <button onclick="enviarPedido()" class="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-xl shadow transition flex items-center justify-center gap-2">
-                    📲 Enviar Pedido por WhatsApp
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Script de carga y lógica -->
-    <script>
-        let productosData = {};
-        let carrito = [];
-
-        // Nombres amigables para mostrar en la web según el ID
-        const nombresPlatos = {
-            "emp-carne": "Empanada de Carne",
-            "emp-jyq": "Empanada de Jamón y Queso",
-            "emp-pollo": "Empanada de Pollo",
-            "emp-humita": "Empanada de Humita",
-            "docena-surtida": "Docena de Empanadas Surtidas",
-            "pizza-muzza": "Pizza Grande de Muzzarella",
-            "pizza-napo": "Pizza Napolitana con Ajo y Perejil",
-            "pizza-fugazzeta": "Fugazzeta Rellena de la Casa",
-            "combo-familiar": "Combo Familiar (Pizza + Empanadas)",
-            "pollo-spiedo": "Pollo Entero al Spiedo con Papas",
-            "mila-napo": "Milanesa Napolitana con Guarnición",
-            "canelones": "Canelones Caseros de Verdura y Ricota",
-            "ensalada-rusa": "Ensalada Rusa Tradicional",
-            "papas-horno": "Papas al Horno con Romero",
-            "flan-casero": "Flan Casero con Dulce de Leche"
-        };
-
-        async function cargarPrecios() {
-            try {
-                const response = await fetch('precios.txt');
-                const texto = await response.text();
-                const lineas = texto.split('\n');
-
-                let html = '';
-                lineas.forEach(linea => {
-                    linea = linea.trim();
-                    if (!linea || linea.startsWith('#')) return;
-
-                    const partes = linea.split('|').map(p => p.trim());
-                    if (partes.length >= 4) {
-                        const id = partes[0];
-                        const precio = parseFloat(partes[1]);
-                        const disponible = partes[2].toUpperCase() === 'SI';
-                        const imagen = partes[3];
-                        const nombre = nombresPlatos[id] || id;
-
-                        productosData[id] = { nombre, precio, disponible, imagen };
-
-                        if (disponible) {
-                            html += `
-                                <div class="bg-white rounded-2xl shadow-md overflow-hidden flex flex-col justify-between border border-amber-100 hover:shadow-lg transition">
-                                    <div class="h-48 overflow-hidden bg-neutral-200">
-                                        <img src="${imagen}" alt="${nombre}" class="w-full h-full object-cover">
-                                    </div>
-                                    <div class="p-4 flex flex-col flex-grow justify-between">
-                                        <div>
-                                            <h3 class="font-bold text-lg text-neutral-800 mb-1">${nombre}</h3>
-                                            <p class="text-amber-700 font-bold text-xl mb-4">$${precio.toLocaleString('es-AR')}</p>
-                                        </div>
-                                        <button onclick="agregarAlCarrito('${id}')" class="w-full bg-amber-900 hover:bg-amber-800 text-amber-50 font-medium py-2 rounded-xl transition">
-                                            Agregar al Carrito
-                                        </button>
-                                    </div>
-                                </div>
-                            `;
-                        }
-                    }
-                });
-                document.getElementById('menu-container').innerHTML = html;
-            } catch (error) {
-                console.error("Error al cargar precios.txt:", error);
-            }
-        }
-
-        function agregarAlCarrito(id) {
-            const producto = productosData[id];
-            const itemExistente = carrito.find(item => item.id === id);
-
-            if (itemExistente) {
-                itemExistente.cantidad++;
-            } else {
-                carrito.push({ id, nombre: producto.nombre, precio: producto.precio, cantidad: 1 });
-            }
-            actualizarCarritoUI();
-        }
-
-        function cambiarCantidad(id, delta) {
-            const item = carrito.find(i => i.id === id);
-            if (item) {
-                item.cantidad += delta;
-                if (item.cantidad <= 0) {
-                    carrito = carrito.filter(i => i.id !== id);
-                }
-            }
-            actualizarCarritoUI();
-        }
-
-        function actualizarCarritoUI() {
-            const totalItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
-            document.getElementById('contador-carrito').innerText = totalItems;
-
-            let html = '';
-            let subtotal = 0;
-
-            if (carrito.length === 0) {
-                html = `<p class="text-center text-neutral-400 py-4">Tu carrito está vacío</p>`;
-            } else {
-                carrito.forEach(item => {
-                    const totalItem = item.precio * item.cantidad;
-                    subtotal += totalItem;
-                    html += `
-                        py-3 flex justify-between items-center text-sm">
-                            <div>
-                                <p class="font-semibold text-neutral-800">${item.nombre}</p>
-                                <p class="text-neutral-500">$${item.precio.toLocaleString('es-AR')} x ${item.cantidad}</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button onclick="cambiarCantidad('${item.id}', -1)" class="w-7 h-7 bg-neutral-100 hover:bg-neutral-200 rounded-lg font-bold">-</button>
-                                <span class="font-semibold w-5 text-center">${item.cantidad}</span>
-                                <button onclick="cambiarCantidad('${item.id}', 1)" class="w-7 h-7 bg-neutral-100 hover:bg-neutral-200 rounded-lg font-bold">+</button>
-                            </div>
+                <div class="lg:col-span-5">
+                    <div class="bg-horno-cream text-horno-charcoal rounded-3xl p-6 sm:p-7 shadow-2xl border border-horno-amber/30 relative">
+                        <div class="absolute -top-3.5 right-6 bg-horno-terracotta text-white text-xs font-bold uppercase tracking-wider px-3.5 py-1 rounded-full shadow">
+                            Recomendado de la Casa
                         </div>
-                    `;
-                });
-            }
 
-            document.getElementById('carrito-items').innerHTML = html;
-
-            const modalidad = document.getElementById('cliente-modalidad').value;
-            const costoEnvio = (modalidad === "Delivery a domicilio") ? 1500 : 0;
-            const totalFinal = subtotal + costoEnvio;
-
-            document.getElementById('modal-subtotal').innerText = `$${subtotal.toLocaleString('es-AR')}`;
-            document.getElementById('modal-envio').innerText = `$${costoEnvio.toLocaleString('es-AR')}`;
-            document.getElementById('modal-total').innerText = `$${totalFinal.toLocaleString('es-AR')}`;
-
-            document.getElementById('campo-direccion').style.display = (modalidad === "Delivery a domicilio") ? "block" : "none";
-        }
-
-        function actualizarTotales() {
-            actualizarCarritoUI();
-        }
-
-        function toggleCarritoModal() {
-            const modal = document.getElementById('carrito-modal');
-            modal.classList.toggle('hidden');
-            actualizarCarritoUI();
-        }
-
-        function enviarPedido() {
-            const telefono = "5492281561041";
-            const nombre = document.getElementById("cliente-nombre").value.trim();
-            const modalidad = document.getElementById("cliente-modalidad").value;
-            const direccion = document.getElementById("cliente-direccion").value.trim();
-            const pago = document.getElementById("cliente-pago").value;
-
-            if (!nombre) {
-                alert("Por favor, ingresá tu nombre para continuar.");
-                return;
-            }
-            if (modalidad === "Delivery a domicilio" && !direccion) {
-                alert("Por favor, ingresá tu dirección para el delivery.");
-                return;
-            }
-            if (carrito.length === 0) {
-                alert("Tu carrito está vacío.");
-                return;
-            }
-
-            const costoEnvio = (modalidad === "Delivery a domicilio") ? 1500 : 0;
-            let subtotal = 0;
-            let detalleTexto = "";
-
-            carrito.forEach(item => {
-                const totalItem = item.precio * item.cantidad;
-                subtotal += totalItem;
-                detalleTexto += `• ${item.cantidad}x ${item.nombre} ($${totalItem.toLocaleString('es-AR')})\n`;
-            });
-
-            const totalFinal = subtotal + costoEnvio;
-
-            let mensaje = `🔥 *NUEVO PEDIDO - EL HORNITO* 🔥\n`;
-            mensaje += `--------------------------------------\n`;
-            mensaje += `👤 *Cliente:* ${nombre}\n`;
-            mensaje += `🛵 *Modalidad:* ${modalidad}\n`;
-            if (modalidad === "Delivery a domicilio") {
-                mensaje += `📍 *Dirección:* ${direccion}\n`;
-            }
-            mensaje += `💳 *Pago:* ${pago}\n`;
-            mensaje += `--------------------------------------\n`;
-            mensaje += `🍽️ *Detalle del pedido:*\n`;
-            mensaje += `${detalleTexto}`;
-            mensaje += `--------------------------------------\n`;
-            if (costoEnvio > 0) {
-                mensaje += `Envío: $${costoEnvio.toLocaleString('es-AR')}\n`;
-            }
-            mensaje += `💰 *TOTAL: $${totalFinal.toLocaleString('es-AR')}*`;
-
-            const url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
-            window.open(url, "_blank");
-        }
-
-        // Cargar los precios al iniciar la página
-        window.onload = cargarPrecios;
-    </script>
-</body>
-</html>
+                        <div class="overflow-hidden rounded-2xl mb-5 aspect-[16
