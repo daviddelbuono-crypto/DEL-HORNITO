@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DEL HORNITO | Casa de Comidas, Rotisería & Pizzas al Horno</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;0,9..144,800;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        display: ['Fraunces', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        horno: {
+                            cream: '#FDF8F2',
+                            sand: '#F5EBE0',
+                            terracotta: '#C84B31',
+                            terracottaDark: '#A33821',
+                            amber: '#E07A22',
+                            charcoal: '#1E1A18',
+                            wood: '#3A2A22',
+                            olive: '#4A5D23'
+                        }
+                    },
+                    boxShadow: {
+                        'warm': '0 10px 30px -10px rgba(58, 42, 34, 0.15)',
+                        'glow': '0 0 25px rgba(224, 122, 34, 0.35)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #FDF8F2; color: #1E1A18; overflow-x: hidden; }
+        .hero-gradient { background: linear-gradient(135deg, rgba(30, 26, 24, 0.92) 0%, rgba(58, 42, 34, 0.85) 55%, rgba(200, 75, 49, 0.75) 100%); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .animate-fade-up { animation: fadeUp 0.45s ease-out forwards; }
+    </style>
+</head>
+<body class="font-sans antialiased selection:bg-horno-terracotta selection:text-white">
+
+    <!-- BARRA DE NAVEGACIÓN -->
+    <header class="sticky top-0 z-40 bg-horno-cream/95 backdrop-blur-md border-b border-horno-wood/10 transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <a href="#inicio" class="flex items-center gap-3 group">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-horno-terracotta to-horno-amber flex items-center justify-center text-white shadow-md group-hover:scale-105 transition-transform">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 20h18"/><path d="M5 20v-7a7 7 0 0 1 14 0v7"/><path d="M9 20v-4a3 3 0 0 1 6 0v4"/><path d="M12 3c.5 1.5 2 2.5 2 4a2 2 0 1 1-4 0c0-1.5 1.5-2.5 2-4Z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <span class="font-display font-extrabold text-xl sm:text-2xl tracking-tight text-horno-charcoal block leading-none">DEL HORNITO</span>
+                        <span class="text-[11px] font-semibold uppercase tracking-widest text-horno-terracotta">Casa de Comidas</span>
+                    </div>
+                </a>
+
+                <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-horno-wood">
+                    <a href="#inicio" class="hover:text-horno-terracotta transition-colors">Inicio</a>
+                    <a href="#especialidades" class="hover:text-horno-terracotta transition-colors">Especialidades</a>
+                    <a href="#menu" class="hover:text-horno-terracotta transition-colors">Menú</a>
+                    <a href="#nosotros" class="hover:text-horno-terracotta transition-colors">Nuestra Cocina</a>
+                    <a href="#contacto" class="hover:text-horno-terracotta transition-colors">Horarios y Ubicación</a>
+                </nav>
+
+                <div class="flex items-center gap-3">
+                    <button onclick="toggleCart(true)" aria-label="Abrir carrito"
+                        class="relative flex items-center gap-2.5 bg-horno-charcoal hover:bg-horno-wood text-white px-4 py-2.5 rounded-2xl font-semibold text-sm shadow-md transition-all active:scale-95">
+                        <i data-lucide="shopping-bag" class="w-4 h-4 text-horno-amber"></i>
+                        <span class="hidden sm:inline">Tu Pedido</span>
+                        <span id="cart-badge" class="bg-horno-terracotta text-white text-xs font-bold px-2 py-0.5 rounded-full min-w-[22px] text-center">0</span>
+                    </button>
+                    <button id="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Abrir menú"
+                        class="md:hidden p-2.5 rounded-xl bg-horno-sand text-horno-charcoal hover:bg-horno-terracotta/15 transition-colors">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="mobile-menu" class="hidden md:hidden bg-horno-cream border-b border-horno-wood/10 px-4 pt-2 pb-5 space-y-2">
+            <a href="#inicio" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl font-semibold text-horno-charcoal hover:bg-horno-sand">Inicio</a>
+            <a href="#especialidades" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl font-semibold text-horno-charcoal hover:bg-horno-sand">Especialidades</a>
+            <a href="#menu" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl font-semibold text-horno-charcoal hover:bg-horno-sand">Menú Completo</a>
+            <a href="#nosotros" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl font-semibold text-horno-charcoal hover:bg-horno-sand">Nuestra Cocina</a>
+            <a href="#contacto" onclick="toggleMobileMenu()" class="block px-4 py-2.5 rounded-xl font-semibold text-horno-charcoal hover:bg-horno-sand">Horarios y Ubicación</a>
+        </div>
+    </header>
+
+    <!-- SECCIÓN HERO -->
+    <section id="inicio" class="relative overflow-hidden bg-horno-charcoal text-white">
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1800&q=80" 
+                 alt="Fondo horno" class="w-full h-full object-cover object-center opacity-45 scale-105">
+            <div class="absolute inset-0 hero-gradient"></div>
+        </div>
+
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-7 space-y-6">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-horno-amber/20 border border-horno-amber/40 text-horno-amber text-xs sm:text-sm font-semibold tracking-wide">
+                        <span class="w-2 h-2 rounded-full bg-horno-amber animate-ping"></span>
+                        <span>Horno encendido • Mediodía y Noche</span>
+                    </div>
+
+                    <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.1] tracking-tight text-horno-cream">
+                        El sabor casero <span class="text-horno-amber italic">recién salido</span> del horno.
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-horno-sand/90 max-w-xl leading-relaxed">
+                        Empanadas jugosas cortadas a cuchillo, pizzas a la piedra con muzzarella abundante, pollos dorados al spiedo y las pastas de los domingos. Como hecho en casa, pero sin que tengas que cocinar.
+                    </p>
+
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <a href="#menu" class="inline-flex items-center justify-center gap-2 bg-horno-terracotta hover:bg-horno-terracottaDark text-white font-bold px-7 py-4 rounded-2xl shadow-glow transition-all hover:-translate-y-0.5">
+                            <i data-lucide="utensils" class="w-5 h-5"></i><span>Ver Menú</span>
+                        </a>
+                        <button onclick="toggleCart(true)" class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/25 text-white font-bold px-7 py-4 rounded-2xl transition-all">
+                            <i data-lucide="flame" class="w-5 h-5 text-horno-amber"></i><span>Hacer Pedido</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5">
+                    <div class="bg-horno-cream text-horno-charcoal rounded-3xl p-6 sm:p-7 shadow-2xl border border-horno-amber/30 relative">
+                        <div class="absolute -top-3.5 right-6 bg-horno-terracotta text-white text-xs font-bold uppercase tracking-wider px-3.5 py-1 rounded-full shadow">
+                            Recomendado de la Casa
+                        </div>
+
+                        <div class="overflow-hidden rounded-2xl mb-5 aspect-[16/10] bg-horno-sand">
+                            <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=900&q=80" alt="Combo" class="w-full h-full object-cover">
+                        </div>
+
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <h2 class="font-display font-bold text-xl text-horno-charcoal">Combo Familiar "Del Hornito"</h2>
+                                <p class="text-sm text-horno-wood/80 mt-1">1 Pizza Grande Muzzarella + 6 Empanadas a elección.</p>
+                            </div>
+                            <span id="hero-combo-price" class="font-display font-extrabold text-xl text-horno-terracotta whitespace-nowrap">$18.500</span>
+                        </div>
+
+                        <button id="hero-combo-btn" onclick="addToCartById('combo-familiar')" 
+                            class="mt-5 w-full bg-horno-charcoal hover:bg-horno-terracotta text-white font-bold py-3.5 px-5 rounded-2xl flex items-center justify-center gap-2 transition-colors">
+                            <i data-lucide="plus-circle" class="w-5 h-5"></i><span>Agregar Combo al Pedido</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MENÚ INTERACTIVO -->
+    <section id="menu" class="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+            <div>
+                <span class="text-horno-terracotta font-bold text-xs uppercase tracking-widest">Armá tu pedido online</span>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-horno-charcoal mt-1">Nuestro Menú</h2>
+            </div>
+            <div class="relative w-full md:w-72">
+                <i data-lucide="search" class="w-4 h-4 text-horno-wood/50 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input type="text" id="menu-search" oninput="renderMenu()" placeholder="Buscar empanadas, pizza, flan..."
+                    class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-white border border-horno-wood/15 text-sm focus:outline-none focus:border-horno-terracotta">
+            </div>
+        </div>
+
+        <div id="category-tabs" class="flex items-center gap-2.5 overflow-x-auto no-scrollbar pb-4 mb-8">
+            <button onclick="setCategory('todos')" data-cat="todos" class="cat-btn active px-5 py-2.5 rounded-2xl text-sm font-bold whitespace-nowrap bg-horno-charcoal text-white shadow-sm">Todo el Menú</button>
+            <button onclick="setCategory('empanadas')" data-cat="empanadas" class="cat-btn px-5 py-2.5 rounded-2xl text-sm font-bold whitespace-nowrap bg-white text-horno-wood hover:bg-horno-sand border border-horno-wood/10">🥟 Empanadas</button>
+            <button onclick="setCategory('pizzas')" data-cat="pizzas" class="cat-btn px-5 py-2.5 rounded-2xl text-sm font-bold whitespace-nowrap bg-white text-horno-wood hover:bg-horno-sand border border-horno-wood/10">🍕 Pizzas al Horno</button>
+            <button onclick="setCategory('platos')" data-cat="platos" class="cat-btn px-5 py-2.5 rounded-2xl text-sm font-bold whitespace-nowrap bg-white text-horno-wood hover:bg-horno-sand border border-horno-wood/10">🍗 Platos Caseros</button>
+            <button onclick="setCategory('guarniciones')" data-cat="guarniciones" class="cat-btn px-5 py-2.5 rounded-2xl text-sm font-bold whitespace-nowrap bg-white text-horno-wood hover:bg-horno-sand border border-horno-wood/10">🥗 Guarniciones y Postres</button>
+        </div>
+
+        <div id="menu-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+
+        <div id="empty-search" class="hidden text-center py-16 bg-white rounded-3xl border border-horno-wood/10">
+            <p class="font-display font-bold text-xl text-horno-charcoal">No encontramos ese plato en el horno</p>
+            <button onclick="resetFilters()" class="mt-4 px-5 py-2.5 rounded-xl bg-horno-terracotta text-white text-sm font-bold">Ver todo el menú</button>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer id="contacto" class="bg-horno-sand border-t border-horno-wood/15 pt-16 pb-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-horno-wood/10">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-horno-terracotta flex items-center justify-center text-white"><i data-lucide="flame" class="w-5 h-5"></i></div>
+                        <span class="font-display font-extrabold text-xl text-horno-charcoal">DEL HORNITO</span>
+                    </div>
+                    <p class="text-sm text-horno-wood/80">Casa de comidas caseras, empanadas y rotisería.</p>
+                </div>
+                <div>
+                    <h4 class="font-display font-bold text-base text-horno-charcoal mb-4">Horarios de Atención</h4>
+                    <p class="text-sm text-horno-wood/85">Martes a Sábados: 11:30 - 14:30 y 19:30 - 23:30 hs.<br>Domingos: 11:30 - 15:00 hs.</p>
+                </div>
+                <div>
+                    <h4 class="font-display font-bold text-base text-horno-charcoal mb-4">Dónde Estamos</h4>
+                    <p class="text-sm text-horno-wood/85">Av. San Martín 742<br>WhatsApp: +54 9 2281 56-1041</p>
+                </div>
+                <div>
+                    <h4 class="font-display font-bold text-base text-horno-charcoal mb-4">Medios de Pago</h4>
+                    <p class="text-sm text-horno-wood/80">Efectivo, Mercado Pago, Transferencia y Tarjetas.</p>
+                </div>
+            </div>
+            <div class="pt-8 text-center text-xs text-horno-wood/70">
+                <p>© 2026 DEL HORNITO. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- CARRITO DRAWER -->
+    <div id="cart-drawer" class="fixed inset-0 z-50 hidden">
+        <div onclick="toggleCart(false)" class="fixed inset-0 bg-horno-charcoal/60"></div>
+        <aside class="fixed right-0 top-0 bottom-0 w-full max-w-md bg-horno-cream shadow-2xl flex flex-col z-10 border-l border-horno-wood/15">
+            <div class="px-6 py-5 bg-white border-b border-horno-wood/10 flex items-center justify-between">
+                <h3 class="font-display font-bold text-xl text-horno-charcoal">Tu Pedido</h3>
+                <button onclick="toggleCart(false)" class="p-2 rounded-xl hover:bg-horno-sand"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-6 space-y-6">
+                <div id="cart-items-container" class="space-y-3"></div>
+                
+                <!-- Formulario completo de entrega -->
+                <div id="checkout-form-section" class="hidden space-y-4 pt-4 border-t border-horno-wood/15">
+                    <h4 class="font-display font-bold text-base text-horno-charcoal">Datos para la entrega</h4>
+                    <div>
+                        <label class="block text-xs font-semibold text-horno-wood mb-1">Nombre *</label>
+                        <input type="text" id="customer-name" placeholder="Ej: David" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-horno-wood/15 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-horno-wood mb-1">Modalidad *</label>
+                        <select id="customer-modalidad" onchange="updateCartUI()" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-horno-wood/15 text-sm">
+                            <option value="Delivery a domicilio">Delivery a domicilio ($1.500)</option>
+                            <option value="Retira en el local">Retira en el local (Sin cargo)</option>
+                        </select>
+                    </div>
+                    <div id="field-direccion">
+                        <label class="block text-xs font-semibold text-horno-wood mb-1">Dirección *</label>
+                        <input type="text" id="customer-address" placeholder="Ej: Alvear 124" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-horno-wood/15 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-horno-wood mb-1">Pago *</label>
+                        <select id="customer-pago" class="w-full px-3.5 py-2.5 rounded-xl bg-white border border-horno-wood/15 text-sm">
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Mercado Pago">Mercado Pago</option>
+                            <option value="Transferencia Bancaria">Transferencia Bancaria</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div id="cart-footer" class="hidden p-6 bg-white border-t border-horno-wood/10 space-y-4">
+                <div class="space-y-1 text-sm">
+                    <div class="flex justify-between"><span>Subtotal</span><span id="cart-subtotal">$0</span></div>
+                    <div class="flex justify-between"><span>Envío</span><span id="cart-envio">$1.500</span></div>
+                    <div class="flex justify-between font-display font-extrabold text-lg text-horno-charcoal border-t pt-1.5">
+                        <span>TOTAL</span>
+                        <span id="cart-total" class="text-horno-terracotta">$0</span>
+                    </div>
+                </div>
+                <button onclick="submitWhatsAppOrder()" class="w-full bg-[#25D366] text-white font-bold py-4 px-5 rounded-2xl flex items-center justify-center gap-2.5">
+                    <i data-lucide="message-circle" class="w-5 h-5"></i> Enviar Pedido por WhatsApp
+                </button>
+            </div>
+        </aside>
+    </div>
+
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 pointer-events-none opacity-0 transition-all duration-300">
+        <div class="bg-horno-charcoal text-white px-5 py-3 rounded-2xl shadow-xl text-sm font-semibold"><span id="toast-message"></span></div>
+    </div>
+
+    <script>
+        const LOCAL_WHATSAPP = "5492281561041";
+
+        const MENU_ITEMS = [
+            { id: 'emp-carne', category: 'empanadas', name: 'Empanada de Carne Cortada a Cuchillo', desc: 'Roast beef tierno con verduras y especias.', price: 1600, available: true, badge: 'Más Pedida', img: 'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&q=80' },
+            { id: 'emp-jyq', category: 'empanadas', name: 'Empanada de Jamón y Muzzarella', desc: 'Jamón natural y muzzarella fundida.', price: 1500, available: true, badge: 'Clásica', img: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80' },
+            { id: 'emp-pollo', category: 'empanadas', name: 'Empanada de Pollo al Horno', desc: 'Suprema desmenuzada y verduras.', price: 1500, available: true, badge: '', img: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80' },
+            { id: 'emp-humita', category: 'empanadas', name: 'Empanada de Humita Cremosa', desc: 'Choclo dulce, calabaza y salsa blanca.', price: 1500, available: true, badge: 'Vegetariana', img: 'https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?auto=format&fit=crop&w=600&q=80' },
+            { id: 'docena-surtida', category: 'empanadas', name: 'Docena de Empanadas a Elección', desc: '12 empanadas recién horneadas.', price: 16500, available: true, badge: 'Promo Docena', img: 'https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pizza-muzza', category: 'pizzas', name: 'Pizza Grande de Muzzarella', desc: 'Salsa casera y doble muzzarella.', price: 11500, available: true, badge: 'Clásica', img: 'https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pizza-napo', category: 'pizzas', name: 'Pizza Napolitana', desc: 'Muzzarella, tomate fresco y provenzal.', price: 13200, available: true, badge: 'Especialidad', img: 'https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pizza-fugazzeta', category: 'pizzas', name: 'Fugazzeta Rellena', desc: 'Muzzarella, jamón y cebolla dorada.', price: 15800, available: true, badge: 'Abundante', img: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80' },
+            { id: 'combo-familiar', category: 'pizzas', name: 'Combo Familiar "Del Hornito"', desc: '1 Pizza Muzzarella + 6 Empanadas.', price: 18500, available: true, badge: 'Combo Ahorro', img: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80' },
+            { id: 'pollo-spiedo', category: 'platos', name: 'Pollo al Spiedo con Papas', desc: 'Pollo dorado al spiedo con papas al horno.', price: 17900, available: true, badge: 'Para Compartir', img: 'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=600&q=80' },
+            { id: 'mila-napo', category: 'platos', name: 'Milanesa Napolitana con Fritas', desc: 'Con fileto, jamón, muzzarella y papas.', price: 12400, available: true, badge: 'Favorito', img: 'https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=600&q=80' },
+            { id: 'canelones', category: 'platos', name: 'Canelones de Verdura y Ricota', desc: 'Gratinados con salsa mixta y parmesano.', price: 9800, available: true, badge: 'Pasta Casera', img: 'https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=600&q=80' },
+            { id: 'ensalada-rusa', category: 'guarniciones', name: 'Ensalada Rusa Casera', desc: 'Papas, zanahorias, arvejas y mayonesa.', price: 4200, available: true, badge: '', img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80' },
+            { id: 'papas-horno', category: 'guarniciones', name: 'Papas Rústicas al Horno', desc: 'Con aceite de oliva y romero.', price: 4800, available: true, badge: '', img: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80' },
+            { id: 'flan-casero', category: 'guarniciones', name: 'Flan Casero con Dulce de Leche', desc: 'Receta tradicional con caramelo.', price: 4500, available: true, badge: 'Postre', img: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=600&q=80' }
+        ];
+
+        let currentCategory = 'todos';
+        let cart = [];
+
+        const formatARS = (amount) => '$' + amount.toLocaleString('es-AR');
+
+        async function loadPricesFromTxt() {
+            try {
+                const response = await fetch('precios.txt?nocache=' + new Date().getTime(), { cache: 'no-store' });
+                if (!response.ok) return;
+                const text = await response.text();
+                const lines = text.split(/\r?\n/);
+
+                lines.forEach(line => {
+                    const cleanLine = line.trim();
+                    if (!cleanLine || cleanLine.startsWith('#')) return;
+                    const parts = cleanLine.split('|').map(p => p.trim());
+                    if (parts.length >= 3) {
+                        const [id, priceStr, availStr, imgUrl] = parts;
+                        const item = MENU_ITEMS.find(p => p.id.toLowerCase() === id.toLowerCase());
+                        if (item) {
+                            const parsedPrice = parseInt(priceStr.replace(/\D/g, ''), 10);
+                            if (!isNaN(parsedPrice)) item.price = parsedPrice;
+                            item.available = (availStr.toUpperCase() === 'SI');
+                            if (imgUrl && imgUrl.length > 2) item.img = imgUrl;
+                        }
+                    }
+                });
+            } catch (error) {
+                console.log('Error leyendo precios.txt:', error);
+            }
+        }
+
+        function renderMenu() {
+            const grid = document.getElementById('menu-grid');
+            const query = document.getElementById('menu-search').value.toLowerCase().trim();
+
+            const filtered = MENU_ITEMS.filter(item => {
+                const matchesCat = currentCategory === 'todos' || item.category === currentCategory;
+                const matchesQuery = item.name.toLowerCase().includes(query) || item.desc.toLowerCase().includes(query);
+                return matchesCat && matchesQuery;
+            });
+
+            grid.innerHTML = filtered.map(item => {
+                const isAvailable = item.available === true;
+
+                return `
+                    <article class="bg-white rounded-3xl overflow-hidden shadow-warm border border-horno-wood/5 flex flex-col justify-between ${isAvailable ? '' : 'opacity-75'}">
+                        <div>
+                            <div class="relative aspect-[16/10] bg-horno-sand overflow-hidden">
+                                <img src="${item.img}" alt="${item.name}" class="w-full h-full object-cover ${isAvailable ? '' : 'grayscale'}">
+                                ${!isAvailable ? '<span class="absolute top-3 left-3 bg-red-600 text-white text-[11px] font-bold px-3 py-1 rounded-full">No disponible</span>' : ''}
+                            </div>
+                            <div class="p-5 pb-3">
+                                <h3 class="font-display font-bold text-lg text-horno-charcoal">${item.name}</h3>
+                                <p class="text-xs sm:text-sm text-horno-wood/75 mt-2">${item.desc}</p>
+                            </div>
+                        </div>
+                        <div class="px-5 pb-5 pt-2 flex items-center justify-between">
+                            <span class="font-display font-extrabold text-xl ${isAvailable ? 'text-horno-terracotta' : 'text-gray-400 line-through'}">${formatARS(item.price)}</span>
+                            ${isAvailable ? `
+                                <button onclick="addToCartById('${item.id}')" class="bg-horno-charcoal hover:bg-horno-terracotta text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-colors">Agregar</button>
+                            ` : '<span class="text-xs text-red-600 font-bold">Agotado</span>'}
+                        </div>
+                    </article>
+                `;
+            }).join('');
+            lucide.createIcons();
+        }
+
+        function setCategory(cat) {
+            currentCategory = cat;
+            renderMenu();
+        }
+
+        function toggleMobileMenu() {
+            document.getElementById('mobile-menu').classList.toggle('hidden');
+        }
+
+        function resetFilters() {
+            document.getElementById('menu-search').value = '';
+            setCategory('todos');
+        }
+
+        function addToCartById(id) {
+            const product = MENU_ITEMS.find(p => p.id === id);
+            if (!product || !product.available) return;
+            const existing = cart.find(item => item.id === id);
+            if (existing) existing.qty += 1; else cart.push({ id, qty: 1 });
+            showToast(`¡${product.name} agregado!`);
+            updateCartUI();
+        }
+
+        function changeQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (item) {
+                item.qty += delta;
+                if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+            }
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const totalCount = cart.reduce((sum, item) => sum + item.qty, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (MENU_ITEMS.find(p => p.id === item.id).price * item.qty), 0);
+            const modalidad = document.getElementById('customer-modalidad').value;
+            const envio = (modalidad === "Delivery a domicilio") ? 1500 : 0;
+            const total = subtotal + envio;
+
+            document.getElementById('cart-badge').textContent = totalCount;
+            document.getElementById('cart-subtotal').textContent = formatARS(subtotal);
+            document.getElementById('cart-envio').textContent = formatARS(envio);
+            document.getElementById('cart-total').textContent = formatARS(total);
+            document.getElementById('field-direccion').style.display = (modalidad === "Delivery a domicilio") ? "block" : "none";
+            
+            const container = document.getElementById('cart-items-container');
+            if (cart.length === 0) {
+                container.innerHTML = '<p class="text-center text-sm text-horno-wood/70 py-6">Tu pedido está vacío</p>';
+                document.getElementById('checkout-form-section').classList.add('hidden');
+                document.getElementById('cart-footer').classList.add('hidden');
+            } else {
+                container.innerHTML = cart.map(item => {
+                    const prod = MENU_ITEMS.find(p => p.id === item.id);
+                    return `
+                        <div class="flex justify-between items-center text-sm bg-horno-sand/50 p-3 rounded-xl">
+                            <div>
+                                <p class="font-semibold text-horno-charcoal">${prod.name}</p>
+                                <span class="text-xs text-horno-terracotta font-bold">${formatARS(prod.price)} x ${item.qty}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <button onclick="changeQty('${item.id}', -1)" class="w-7 h-7 bg-white rounded-lg shadow-sm font-bold text-horno-wood hover:bg-horno-terracotta hover:text-white transition-colors">-</button>
+                                <span class="font-bold w-5 text-center">${item.qty}</span>
+                                <button onclick="changeQty('${item.id}', 1)" class="w-7 h-7 bg-white rounded-lg shadow-sm font-bold text-horno-wood hover:bg-horno-terracotta hover:text-white transition-colors">+</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+                document.getElementById('checkout-form-section').classList.remove('hidden');
+                document.getElementById('cart-footer').classList.remove('hidden');
+            }
+        }
+
+        function toggleCart(open) {
+            document.getElementById('cart-drawer').classList.toggle('hidden', !open);
+            if (open) updateCartUI();
+        }
+
+        function submitWhatsAppOrder() {
+            const name = document.getElementById('customer-name').value.trim();
+            const modalidad = document.getElementById('customer-modalidad').value;
+            const direccion = document.getElementById('customer-address').value.trim();
+            const pago = document.getElementById('customer-pago').value;
+
+            if (!name) { showToast('Por favor, ingresá tu nombre'); return; }
+            if (modalidad === "Delivery a domicilio" && !direccion) { showToast('Por favor, ingresá tu dirección'); return; }
+
+            let subtotal = 0;
+            let detalleTexto = "";
+
+            cart.forEach(item => {
+                const prod = MENU_ITEMS.find(p => p.id === item.id);
+                const totalItem = prod.price * item.qty;
+                subtotal += totalItem;
+                detalleTexto += `• ${item.qty}x ${prod.name} (${formatARS(totalItem)})\n`;
+            });
+
+            const envio = (modalidad === "Delivery a domicilio") ? 1500 : 0;
+            const totalFinal = subtotal + envio;
+
+            let texto = `🔥 *NUEVO PEDIDO - EL HORNITO* 🔥\n`;
+            texto += `--------------------------------------\n`;
+            texto += `👤 *Cliente:* ${name}\n`;
+            texto += `🛵 *Modalidad:* ${modalidad}\n`;
+            if (modalidad === "Delivery a domicilio") {
+                texto += `📍 *Dirección:* ${direccion}\n`;
+            }
+            texto += `💳 *Pago:* ${pago}\n`;
+            texto += `--------------------------------------\n`;
+            texto += `🍽️ *Detalle del pedido:*\n`;
+            texto += `${detalleTexto}`;
+            texto += `--------------------------------------\n`;
+            if (envio > 0) {
+                texto += `Envío: ${formatARS(envio)}\n`;
+            }
+            texto += `💰 *TOTAL: ${formatARS(totalFinal)}*`;
+
+            window.open(`https://wa.me/${LOCAL_WHATSAPP}?text=${encodeURIComponent(texto)}`, '_blank');
+        }
+
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').textContent = msg;
+            toast.classList.remove('opacity-0');
+            setTimeout(() => toast.classList.add('opacity-0'), 2500);
+        }
+
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadPricesFromTxt();
+            renderMenu();
+            updateCartUI();
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>
