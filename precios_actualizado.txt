@@ -1,0 +1,23 @@
+# FORMATO: ID | PRECIO | DISPONIBLE (SI/NO) | LINK DE IMAGEN
+# Teléfono de WhatsApp del local para los pedidos: +5492281444444
+
+emp-carne | 1600 | SI | https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&q=80
+emp-jyq | 1500 | SI | https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80
+emp-pollo | 1500 | SI | https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=600&q=80
+emp-humita | 1500 | SI | https://images.unsplash.com/photo-1513456852971-30c0b8199d4d?auto=format&fit=crop&w=600&q=80
+docena-surtida | 16500 | SI | https://images.unsplash.com/photo-1628840042765-356cda07504e?auto=format&fit=crop&w=600&q=80
+
+pizza-muzza | 11500 | SI | https://images.unsplash.com/photo-1574071318508-1cdbab80d002?auto=format&fit=crop&w=600&q=80
+pizza-napo | 13200 | SI | https://images.unsplash.com/photo-1595854341625-f33ee10dbf94?auto=format&fit=crop&w=600&q=80
+pizza-fugazzeta | 15800 | SI | https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80
+combo-familiar | 18500 | SI | https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80
+
+pollo-spiedo | 17900 | SI | https://images.unsplash.com/photo-1598103442097-8b74394b95c6?auto=format&fit=crop&w=600&q=80
+mila-napo | 12400 | SI | https://images.unsplash.com/photo-1632778149955-e80f8ceca2e8?auto=format&fit=crop&w=600&q=80
+canelones | 9800 | SI | https://images.unsplash.com/photo-1621996346565-e3dbc646d9a9?auto=format&fit=crop&w=600&q=80
+
+ensalada-rusa | 4200 | SI | https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80
+papas-horno | 4800 | SI | https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80
+flan-casero | 4500 | SI | https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=600&q=80
+
+# Costo de envío: 1500
