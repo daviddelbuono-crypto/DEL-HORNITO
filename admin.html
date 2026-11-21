@@ -12,7 +12,7 @@
     body { margin: 0; background: #f4f5f7; color: #222; padding-bottom: 90px; }
     header { background: #ea1d2c; color: white; padding: 16px; position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
     header h1 { margin: 0; font-size: 18px; }
-    .btn-config { background: rgba(255,255,255,0.2); border: none; color: white; padding: 6px 10px; border-radius: 6px; font-size: 13px; cursor: pointer; }
+    .btn-config { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; }
     .container { padding: 12px; max-width: 600px; margin: auto; }
     .card { background: white; border-radius: 12px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
     .card.inactivo { opacity: 0.6; background: #fafafa; }
@@ -46,7 +46,7 @@
 
 <header>
   <h1>🔥 DEL HORNITO - Panel</h1>
-  <button class="btn-config" onclick="abrirConfig()">⚙️ Token</button>
+  <button class="btn-config" id="btn-token">⚙️ Token</button>
 </header>
 
 <div class="container" id="lista-productos">
@@ -54,7 +54,7 @@
 </div>
 
 <div class="footer-bar">
-  <button class="btn-guardar" id="btn-guardar" onclick="guardarCambios()">💾 GUARDAR CAMBIOS EN LA WEB</button>
+  <button class="btn-guardar" id="btn-guardar">💾 GUARDAR CAMBIOS EN LA WEB</button>
 </div>
 
 <div id="modal-token">
@@ -62,7 +62,7 @@
     <h3 style="margin-top:0;">Conectar con GitHub</h3>
     <p style="font-size:13px; color:#555;">Pegá tu Token de acceso para habilitar la edición desde este celular:</p>
     <input type="text" id="input-token" placeholder="github_pat_...">
-    <button onclick="guardarToken()">Guardar y Conectar</button>
+    <button id="btn-conectar">Guardar y Conectar</button>
   </div>
 </div>
 
@@ -91,9 +91,15 @@
     }
   }
 
+  document.getElementById('btn-token').addEventListener('click', abrirConfig);
+  document.getElementById('btn-conectar').addEventListener('click', guardarToken);
+  document.getElementById('btn-guardar').addEventListener('click', guardarCambios);
+
   async function cargarArchivo() {
     const token = getToken();
     if (!token) { abrirConfig(); return; }
+
+    document.getElementById('lista-productos').innerHTML = '<p style="text-align:center; color:#666;">Conectando con GitHub...</p>';
 
     try {
       const res = await fetch(`https://github.com{OWNER}/${REPO}/contents/${FILE_PATH}`, {
@@ -112,7 +118,7 @@
       const contenido = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
       renderizar(contenido);
     } catch (e) {
-      alert('No se pudo cargar: ' + e.message);
+      document.getElementById('lista-productos').innerHTML = `<p style="text-align:center; color:#d93025; font-weight:bold;">${e.message}</p>`;
       abrirConfig();
     }
   }
@@ -127,15 +133,18 @@
       if (!trim || trim.startsWith('#')) return;
 
       const partes = trim.split('|').map(p => p.trim());
+      const col0 = partes.at(0) || '';
+      const col1 = partes.at(1) || '';
+      const col2 = partes.at(2) || '';
       
-      if (partes[0].toLowerCase() === 'envio') {
+      if (col0.toLowerCase() === 'envio') {
         contenedor.innerHTML += `
           <div class="card" style="border-left: 4px solid #ff9800;">
             <div class="info">
               <div class="prod-id">🛵 Costo de Envío</div>
               <div class="precio-box">
                 <span>$</span>
-                <input type="number" class="precio-input" data-index="${index}" data-tipo="envio" value="${partes[1]}">
+                <input type="number" class="precio-input" data-index="${index}" data-tipo="envio" value="${col1}">
               </div>
             </div>
           </div>`;
@@ -143,17 +152,15 @@
       }
 
       if (partes.length >= 3) {
-        const id = partes[0];
-        const precio = partes[1];
-        const disponible = partes[2].toUpperCase() === 'SI';
+        const disponible = col2.toUpperCase() === 'SI';
 
         contenedor.innerHTML += `
           <div class="card ${disponible ? '' : 'inactivo'}" id="card-${index}">
             <div class="info">
-              <div class="prod-id">${id.replace(/-/g, ' ')}</div>
+              <div class="prod-id">${col0.replace(/-/g, ' ')}</div>
               <div class="precio-box">
                 <span>$</span>
-                <input type="number" class="precio-input" data-index="${index}" data-tipo="prod" value="${precio}">
+                <input type="number" class="precio-input" data-index="${index}" data-tipo="prod" value="${col1}">
               </div>
             </div>
             <div>
@@ -192,17 +199,19 @@
 
     const inputs = document.querySelectorAll('.precio-input');
     inputs.forEach(inp => {
-      const idx = inp.dataset.index;
+      const idx = Number(inp.dataset.index);
       const tipo = inp.dataset.tipo;
       const nuevoPrecio = inp.value.trim();
-      const partes = lineasOriginales[idx].split('|').map(p => p.trim());
+      const partes = lineasOriginales.at(idx).split('|').map(p => p.trim());
+      const col0 = partes.at(0) || '';
+      const col3 = partes.at(3) || '';
 
       if (tipo === 'envio') {
-        lineasOriginales[idx] = `${partes[0]} | ${nuevoPrecio}`;
+        lineasOriginales.splice(idx, 1, `${col0} | ${nuevoPrecio}`);
       } else {
         const activo = document.getElementById(`chk-${idx}`).checked ? 'SI' : 'NO';
-        const img = partes[3] ? ` | ${partes[3]}` : '';
-        lineasOriginales[idx] = `${partes[0]} | ${nuevoPrecio} | ${activo}${img}`;
+        const img = col3 ? ` | ${col3}` : '';
+        lineasOriginales.splice(idx, 1, `${col0} | ${nuevoPrecio} | ${activo}${img}`);
       }
     });
 
@@ -214,24 +223,23 @@
         method: 'PUT',
         headers: {
           'Authorization': `token ${getToken()}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          message: 'Actualización de precios/stock desde App Móvil',
-          content: contentBase64,
-          sha: fileSha
-        })
-      });
-
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(`Error ${res.status}: ${errData.message || 'No se pudo guardar'}`);
-      }
-      const data = await res.json();
-      fileSha = data.content.sha;
-      alert('✅ ¡Listo! Precios y stock actualizados. En 1 minuto se ven en la web.');
-    } catch (e) {
 Usa el código con precaución.
+'Content-Type': 'application/json'
+},
+body: JSON.stringify({
+message: 'Actualización de precios/stock desde App Móvil',
+content: contentBase64,
+sha: fileSha
+})
+});
+if (!res.ok) {
+const errData = await res.json().catch(() => ({}));
+throw new Error(Error ${res.status}: ${errData.message || 'No se pudo guardar'});
+}
+const data = await res.json();
+fileSha = data.content.sha;
+alert('✅ ¡Listo! Precios y stock actualizados. En 1 minuto se ven en la web.');
+} catch (e) {
 alert('❌ Error al guardar: ' + e.message);
 } finally {
 btn.disabled = false;
@@ -239,18 +247,3 @@ btn.textContent = '💾 GUARDAR CAMBIOS EN LA WEB';
 }
 }
 cargarArchivo();
-
-
-
----
-
-### Qué mejora esta versión para evitar el `Failed to fetch`:
-* **Limpia automáticamente espacios invisibles** si al copiar y pegar el token en el celular quedó un espacio o salto de línea.
-* **Evita bloqueos de CORS** al quitar el parámetro extra de la URL y usar `cache: 'no-store'`.
-* **Corrige la lectura de columnas** para mostrar cada plato y precio exacto.
-
-*(Recordá esperar 1 minuto después de guardar los cambios en GitHub antes de recargar la página en el celular).*
-
-<FollowUp>
-Actualizá el código de **`admin.html`**, recargá la página en tu celular y contame si ya te **cargó la lista de precios** o qué número de error exacto te muestra.
-</FollowUp>
