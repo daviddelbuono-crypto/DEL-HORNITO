@@ -375,52 +375,53 @@
                     priceRows.set(id, {
                         price: parsedPrice,
                         available: availStr.toUpperCase() === 'SI',
-                        img: imgUrl || ''
+                        img: imgUrl || 'pizza.jpg'
                     });
+
+                    // Si es un plato nuevo agregado desde la app (tiene categoría, nombre y descripción)
+                    if (parts.length >= 7 && !MENU_ITEMS.some(item => item.id === id)) {
+                        MENU_ITEMS.push({
+                            id: id,
+                            category: parts.at(4) || 'platos',
+                            name: parts.at(5) || id,
+                            desc: parts.at(6) || 'Especialidad de la casa.',
+                            price: parsedPrice,
+                            available: availStr.toUpperCase() === 'SI',
+                            badge: 'Nuevo',
+                            img: imgUrl || 'pizza.jpg'
+                        });
+                    }
                 });
-
-                if (parsedDeliveryFee === null) {
-                    throw new Error('Falta la configuración ENVIO en precios.txt. Agregá una línea como: ENVIO | 4000.');
-                }
-                if (!parsedWhatsapp) {
-                    throw new Error('Falta el teléfono de WhatsApp en el comentario inicial de precios.txt.');
-                }
-
-                const missingIds = MENU_ITEMS
-                    .filter(item => !priceRows.has(item.id))
-                    .map(item => item.id);
-
-                if (missingIds.length) {
-                    throw new Error('Faltan productos en precios.txt: ' + missingIds.join(', '));
-                }
 
                 MENU_ITEMS.forEach(item => {
-                    const row = priceRows.get(item.id);
-                    item.price = row.price;
-                    item.available = row.available;
-                    if (row.img) item.img = row.img;
+                    if (priceRows.has(item.id)) {
+                        const row = priceRows.get(item.id);
+                        item.price = row.price;
+                        item.available = row.available;
+                        if (row.img) item.img = row.img;
+                    }
                 });
 
-                DELIVERY_FEE = parsedDeliveryFee;
-                LOCAL_WHATSAPP = parsedWhatsapp;
-                pricesLoaded = true;
-                const footerPhone = document.getElementById('footer-whatsapp');
-                if (footerPhone) footerPhone.textContent = '+' + LOCAL_WHATSAPP;
-                document.getElementById('hero-combo-price').textContent =
-                    formatARS(MENU_ITEMS.find(item => item.id === 'combo-familiar').price);
-                document.getElementById('hero-combo-btn').disabled =
-                    !MENU_ITEMS.find(item => item.id === 'combo-familiar').available;
-                document.getElementById('hero-combo-btn').classList.toggle(
-                    'opacity-50',
-                    !MENU_ITEMS.find(item => item.id === 'combo-familiar').available
-                );
+                DELIVERY_FEE = parsedDeliveryFee ?? 0;
+                if (parsedWhatsapp) {
+                    LOCAL_WHATSAPP = parsedWhatsapp;
+                    const waSpan = document.getElementById('footer-whatsapp');
+                    if (waSpan) waSpan.textContent = '+' + LOCAL_WHATSAPP;
+                }
 
+                const combo = MENU_ITEMS.find(p => p.id === 'combo-familiar');
+                if (combo && combo.price) {
+                    const heroPrice = document.getElementById('hero-combo-price');
+                    const heroBtn = document.getElementById('hero-combo-btn');
+                    if (heroPrice) heroPrice.textContent = formatARS(combo.price);
+                    if (heroBtn) heroBtn.disabled = !combo.available;
+                }
+
+                pricesLoaded = true;
                 return true;
-            } catch (error) {
-                pricesError = error.message || 'No se pudo leer precios.txt.';
-                document.getElementById('hero-combo-price').textContent = 'No disponible';
-                document.getElementById('hero-combo-btn').disabled = true;
-                console.error('Error al cargar precios.txt:', error);
+            } catch (err) {
+                pricesError = err.message;
+                console.error(err);
                 return false;
             }
         }
