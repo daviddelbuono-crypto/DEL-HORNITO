@@ -1,0 +1,15 @@
+{
+  "name": "Del Hornito - Gestión",
+  "short_name": "Del Hornito",
+  "start_url": "/admin.html",
+  "display": "standalone",
+  "background_color": "#f4f5f7",
+  "theme_color": "#ea1d2c",
+  "icons": [
+    {
+      "src": "https://flaticon.com",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
