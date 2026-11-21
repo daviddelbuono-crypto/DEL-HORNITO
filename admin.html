@@ -12,7 +12,7 @@
     body { margin: 0; background: #f4f5f7; color: #222; padding-bottom: 90px; }
     header { background: #ea1d2c; color: white; padding: 16px; position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
     header h1 { margin: 0; font-size: 18px; }
-    .btn-config { background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 6px; font-size: 13px; cursor: pointer; }
+    .btn-config { background: rgba(255,255,255,0.25); border: none; color: white; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; }
     .container { padding: 12px; max-width: 600px; margin: auto; }
     .card { background: white; border-radius: 12px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
     .card.inactivo { opacity: 0.6; background: #fafafa; }
@@ -21,7 +21,6 @@
     .precio-box { display: flex; align-items: center; gap: 4px; }
     .precio-box span { font-weight: bold; color: #555; font-size: 16px; }
     .precio-input { width: 110px; padding: 8px; font-size: 16px; font-weight: bold; border: 1px solid #ccc; border-radius: 8px; }
-    
     .switch { position: relative; display: inline-block; width: 64px; height: 34px; flex-shrink: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 34px; }
@@ -31,15 +30,13 @@
     .estado-txt { font-size: 11px; font-weight: bold; text-align: center; margin-top: 4px; }
     .txt-si { color: #00a650; }
     .txt-no { color: #d93025; }
-
     .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 12px 16px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; justify-content: center; }
     .btn-guardar { background: #00a650; color: white; border: none; width: 100%; max-width: 600px; padding: 15px; font-size: 17px; font-weight: bold; border-radius: 10px; cursor: pointer; }
     .btn-guardar:disabled { background: #999; }
-
-    #modal-token { position: fixed; inset: 0; background: rgba(0,0,0,0.7); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 20; }
+    #modal-token { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 20; }
     .modal-box { background: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; }
-    .modal-box input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 8px; }
-    .modal-box button { width: 100%; padding: 12px; background: #ea1d2c; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 15px; }
+    .modal-box input { width: 100%; padding: 12px; margin: 12px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
+    .modal-box button { width: 100%; padding: 12px; background: #ea1d2c; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; }
   </style>
 </head>
 <body>
@@ -67,11 +64,11 @@
 </div>
 
 <script>
-  const OWNER = 'daviddelbuono-crypto';
-  const REPO = 'DEL-HORNITO';
-  const FILE_PATH = 'precios.txt';
-  let fileSha = '';
-  let lineasOriginales = [];
+  var OWNER = 'daviddelbuono-crypto';
+  var REPO = 'DEL-HORNITO';
+  var FILE_PATH = 'precios.txt';
+  var fileSha = '';
+  var lineasOriginales = [];
 
   function getToken() {
     return (localStorage.getItem('gh_token_hornito') || '').replace(/\s+/g, '');
@@ -83,7 +80,7 @@
   }
 
   function guardarToken() {
-    const val = document.getElementById('input-token').value.replace(/\s+/g, '');
+    var val = document.getElementById('input-token').value.replace(/\s+/g, '');
     if (val) {
       localStorage.setItem('gh_token_hornito', val);
       document.getElementById('modal-token').style.display = 'none';
@@ -95,92 +92,86 @@
   document.getElementById('btn-conectar').addEventListener('click', guardarToken);
   document.getElementById('btn-guardar').addEventListener('click', guardarCambios);
 
-  async function cargarArchivo() {
-    const token = getToken();
+  function cargarArchivo() {
+    var token = getToken();
     if (!token) { abrirConfig(); return; }
 
     document.getElementById('lista-productos').innerHTML = '<p style="text-align:center; color:#666;">Conectando con GitHub...</p>';
 
-    try {
-      const res = await fetch(`https://github.com{OWNER}/${REPO}/contents/${FILE_PATH}`, {
-        cache: 'no-store',
-        headers: {
-          'Authorization': `token ${token}`,
-          'Accept': 'application/vnd.github.v3+json'
-        }
-      });
-      if (!res.ok) {
-        const errData = await res.json().catch(() => ({}));
-        throw new Error(`Error ${res.status}: ${errData.message || 'Revisá el Token'}`);
+    fetch('https://github.com' + OWNER + '/' + REPO + '/contents/' + FILE_PATH, {
+      cache: 'no-store',
+      headers: {
+        'Authorization': 'token ' + token,
+        'Accept': 'application/vnd.github.v3+json'
       }
-      const data = await res.json();
+    })
+    .then(function(res) {
+      if (!res.ok) {
+        throw new Error('Error ' + res.status + ' al conectar. Revisá el Token.');
+      }
+      return res.json();
+    })
+    .then(function(data) {
       fileSha = data.sha;
-      const contenido = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
+      var contenido = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
       renderizar(contenido);
-    } catch (e) {
-      document.getElementById('lista-productos').innerHTML = `<p style="text-align:center; color:#d93025; font-weight:bold;">${e.message}</p>`;
+    })
+    .catch(function(e) {
+      document.getElementById('lista-productos').innerHTML = '<p style="text-align:center; color:#d93025; font-weight:bold;">' + e.message + '</p>';
       abrirConfig();
-    }
+    });
   }
 
   function renderizar(texto) {
-    const contenedor = document.getElementById('lista-productos');
+    var contenedor = document.getElementById('lista-productos');
     contenedor.innerHTML = '';
     lineasOriginales = texto.split('\n');
 
-    lineasOriginales.forEach((linea, index) => {
-      const trim = linea.trim();
-      if (!trim || trim.startsWith('#')) return;
+    lineasOriginales.forEach(function(linea, index) {
+      var trim = linea.trim();
+      if (!trim || trim.charAt(0) === '#') return;
 
-      const partes = trim.split('|').map(p => p.trim());
-      const col0 = partes.at(0) || '';
-      const col1 = partes.at(1) || '';
-      const col2 = partes.at(2) || '';
+      var partes = trim.split('|').map(function(p) { return p.trim(); });
+      var col0 = partes.at(0) || '';
+      var col1 = partes.at(1) || '';
+      var col2 = partes.at(2) || '';
       
       if (col0.toLowerCase() === 'envio') {
-        contenedor.innerHTML += `
-          <div class="card" style="border-left: 4px solid #ff9800;">
-            <div class="info">
-              <div class="prod-id">🛵 Costo de Envío</div>
-              <div class="precio-box">
-                <span>$</span>
-                <input type="number" class="precio-input" data-index="${index}" data-tipo="envio" value="${col1}">
-              </div>
-            </div>
-          </div>`;
+        contenedor.innerHTML += '<div class="card" style="border-left: 4px solid #ff9800;">' +
+          '<div class="info">' +
+          '<div class="prod-id">🛵 Costo de Envío</div>' +
+          '<div class="precio-box"><span>$</span>' +
+          '<input type="number" class="precio-input" data-index="' + index + '" data-tipo="envio" value="' + col1 + '">' +
+          '</div></div></div>';
         return;
       }
 
       if (partes.length >= 3) {
-        const disponible = col2.toUpperCase() === 'SI';
+        var disponible = col2.toUpperCase() === 'SI';
+        var claseCard = disponible ? 'card' : 'card inactivo';
+        var checkedAttr = disponible ? 'checked' : '';
+        var claseTxt = disponible ? 'estado-txt txt-si' : 'estado-txt txt-no';
+        var textoEstado = disponible ? 'DISPONIBLE' : 'PAUSADO';
 
-        contenedor.innerHTML += `
-          <div class="card ${disponible ? '' : 'inactivo'}" id="card-${index}">
-            <div class="info">
-              <div class="prod-id">${col0.replace(/-/g, ' ')}</div>
-              <div class="precio-box">
-                <span>$</span>
-                <input type="number" class="precio-input" data-index="${index}" data-tipo="prod" value="${col1}">
-              </div>
-            </div>
-            <div>
-              <label class="switch">
-                <input type="checkbox" id="chk-${index}" ${disponible ? 'checked' : ''} onchange="toggleVisual(${index})">
-                <span class="slider"></span>
-              </label>
-              <div class="estado-txt ${disponible ? 'txt-si' : 'txt-no'}" id="lbl-${index}">
-                ${disponible ? 'DISPONIBLE' : 'PAUSADO'}
-              </div>
-            </div>
-          </div>`;
+        contenedor.innerHTML += '<div class="' + claseCard + '" id="card-' + index + '">' +
+          '<div class="info">' +
+          '<div class="prod-id">' + col0.replace(/-/g, ' ') + '</div>' +
+          '<div class="precio-box"><span>$</span>' +
+          '<input type="number" class="precio-input" data-index="' + index + '" data-tipo="prod" value="' + col1 + '">' +
+          '</div></div>' +
+          '<div><label class="switch">' +
+          '<input type="checkbox" id="chk-' + index + '" ' + checkedAttr + ' onchange="toggleVisual(' + index + ')">' +
+          '<span class="slider"></span></label>' +
+          '<div class="' + claseTxt + '" id="lbl-' + index + '">' + textoEstado + '</div>' +
+          '</div></div>';
       }
     });
   }
 
   function toggleVisual(index) {
-    const chk = document.getElementById(`chk-${index}`);
-    const card = document.getElementById(`card-${index}`);
-    const lbl = document.getElementById(`lbl-${index}`);
+    var chk = document.getElementById('chk-' + index);
+    var card = document.getElementById('card-' + index);
+    var lbl = document.getElementById('lbl-' + index);
     if (chk.checked) {
       card.classList.remove('inactivo');
       lbl.textContent = 'DISPONIBLE';
@@ -192,37 +183,36 @@
     }
   }
 
-  async function guardarCambios() {
-    const btn = document.getElementById('btn-guardar');
+  function guardarCambios() {
+    var btn = document.getElementById('btn-guardar');
     btn.disabled = true;
     btn.textContent = '⏳ Guardando...';
 
-    const inputs = document.querySelectorAll('.precio-input');
-    inputs.forEach(inp => {
-      const idx = Number(inp.dataset.index);
-      const tipo = inp.dataset.tipo;
-      const nuevoPrecio = inp.value.trim();
-      const partes = lineasOriginales.at(idx).split('|').map(p => p.trim());
-      const col0 = partes.at(0) || '';
-      const col3 = partes.at(3) || '';
+    var inputs = document.querySelectorAll('.precio-input');
+    inputs.forEach(function(inp) {
+      var idx = Number(inp.dataset.index);
+      var tipo = inp.dataset.tipo;
+      var nuevoPrecio = inp.value.trim();
+      var partes = lineasOriginales.at(idx).split('|').map(function(p) { return p.trim(); });
+      var col0 = partes.at(0) || '';
+      var col3 = partes.at(3) || '';
 
       if (tipo === 'envio') {
-        lineasOriginales.splice(idx, 1, `${col0} | ${nuevoPrecio}`);
+        lineasOriginales.splice(idx, 1, col0 + ' | ' + nuevoPrecio);
       } else {
-        const activo = document.getElementById(`chk-${idx}`).checked ? 'SI' : 'NO';
-        const img = col3 ? ` | ${col3}` : '';
-        lineasOriginales.splice(idx, 1, `${col0} | ${nuevoPrecio} | ${activo}${img}`);
+        var activo = document.getElementById('chk-' + idx).checked ? 'SI' : 'NO';
+        var img = col3 ? (' | ' + col3) : '';
+        lineasOriginales.splice(idx, 1, col0 + ' | ' + nuevoPrecio + ' | ' + activo + img);
       }
     });
 
-    const nuevoContenido = lineasOriginales.join('\n');
-    const contentBase64 = btoa(unescape(encodeURIComponent(nuevoContenido)));
+    var nuevoContenido = lineasOriginales.join('\n');
+    var contentBase64 = btoa(unescape(encodeURIComponent(nuevoContenido)));
 
-    try {
-      const res = await fetch(`https://github.com{OWNER}/${REPO}/contents/${FILE_PATH}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `token ${getToken()}`,
+    fetch('https://github.com' + OWNER + '/' + REPO + '/contents/' + FILE_PATH, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'token ' + getToken(),
 Usa el código con precaución.
 'Content-Type': 'application/json'
 },
@@ -231,19 +221,37 @@ message: 'Actualización de precios/stock desde App Móvil',
 content: contentBase64,
 sha: fileSha
 })
-});
+})
+.then(function(res) {
 if (!res.ok) {
-const errData = await res.json().catch(() => ({}));
-throw new Error(Error ${res.status}: ${errData.message || 'No se pudo guardar'});
+throw new Error('Error ' + res.status + ' al guardar en GitHub.');
 }
-const data = await res.json();
+return res.json();
+})
+.then(function(data) {
 fileSha = data.content.sha;
 alert('✅ ¡Listo! Precios y stock actualizados. En 1 minuto se ven en la web.');
-} catch (e) {
+})
+.catch(function(e) {
 alert('❌ Error al guardar: ' + e.message);
-} finally {
+})
+.finally(function() {
 btn.disabled = false;
 btn.textContent = '💾 GUARDAR CAMBIOS EN LA WEB';
-}
+});
 }
 cargarArchivo();
+
+
+
+### Pasos para actualizarlo:
+1. Abrí **`admin.html`** en tu GitHub → tocá el **lápiz (Editar)** → borrá todo y pegá este código limpio.
+2. Tocá **Guardar cambios (Commit changes)**.
+3. Esperá 1 minuto y entrá desde el celular a:
+   👉 **[https://del-hornito.pages.dev/admin.html?v=4](https://del-hornito.pages.dev/admin.html?v=4)**
+
+Ahora sí no tiene ningún carácter especial que se pierda al copiar y el botón **`⚙️ Token`** te abre al instante.
+
+<FollowUp>
+Reemplazá el código en **`admin.html`**, abrí el enlace con **`?v=4`** y contame si ya te abre el cuadro para pegar el Token y carga tus productos.
+</FollowUp>
