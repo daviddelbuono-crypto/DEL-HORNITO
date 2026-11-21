@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,16 +10,18 @@
   <style>
     * { box-sizing: border-box; font-family: sans-serif; }
     body { margin: 0; background: #f4f5f7; color: #222; padding-bottom: 90px; }
-    header { background: #ea1d2c; color: white; padding: 16px; position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; }
-    header h1 { margin: 0; font-size: 18px; }
-    .btn-config { background: rgba(255,255,255,0.25); border: none; color: white; padding: 8px 12px; border-radius: 6px; font-weight: bold; }
+    header { background: #ea1d2c; color: white; padding: 14px 16px; position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    header h1 { margin: 0; font-size: 17px; }
+    .hdr-btns { display: flex; gap: 6px; }
+    .btn-top { background: rgba(255,255,255,0.25); border: none; color: white; padding: 8px 10px; border-radius: 6px; font-weight: bold; font-size: 13px; }
+    .btn-nuevo { background: #fff; color: #ea1d2c; }
     .container { padding: 12px; max-width: 600px; margin: auto; }
     .card { background: white; border-radius: 12px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
     .card.inactivo { opacity: 0.6; background: #fafafa; }
     .info { flex: 1; }
     .prod-id { font-weight: 700; font-size: 15px; text-transform: uppercase; margin-bottom: 6px; }
     .precio-box { display: flex; align-items: center; gap: 4px; }
-    .precio-input { width: 110px; padding: 8px; font-size: 16px; font-weight: bold; border: 1px solid #ccc; border-radius: 8px; }
+    .precio-input { width: 120px; padding: 8px; font-size: 16px; font-weight: bold; border: 1px solid #ccc; border-radius: 8px; }
     .switch { position: relative; display: inline-block; width: 64px; height: 34px; }
     .switch input { opacity: 0; width: 0; height: 0; }
     .slider { position: absolute; cursor: pointer; inset: 0; background-color: #ccc; transition: .3s; border-radius: 34px; }
@@ -30,33 +33,64 @@
     .txt-no { color: #d93025; }
     .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 12px 16px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; justify-content: center; }
     .btn-guardar { background: #00a650; color: white; border: none; width: 100%; max-width: 600px; padding: 15px; font-size: 17px; font-weight: bold; border-radius: 10px; }
-    #modal-token { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 20; }
-    .modal-box { background: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; }
-    .modal-box input { width: 100%; padding: 12px; margin: 12px 0; border: 1px solid #ccc; border-radius: 8px; }
-    .modal-box button { width: 100%; padding: 12px; background: #ea1d2c; color: white; border: none; border-radius: 8px; font-weight: bold; }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; padding: 16px; z-index: 20; }
+    .modal-box { background: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 420px; }
+    .modal-box input, .modal-box select { width: 100%; padding: 10px; margin: 6px 0 12px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; }
+    .modal-btns { display: flex; gap: 8px; }
+    .modal-btns button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; color: white; }
   </style>
 </head>
 <body>
 <header>
-  <h1>🔥 DEL HORNITO - Panel</h1>
-  <button class="btn-config" onclick="abrirConfig()">⚙️ Token</button>
+  <h1>🔥 DEL HORNITO</h1>
+  <div class="hdr-btns">
+    <button class="btn-top btn-nuevo" onclick="abrirNuevo()">+ Plato</button>
+    <button class="btn-top" onclick="abrirConfig()">⚙️</button>
+  </div>
 </header>
 <div class="container" id="lista-productos"><p style="text-align:center;">Cargando...</p></div>
 <div class="footer-bar"><button class="btn-guardar" id="btn-guardar" onclick="guardarCambios()">💾 GUARDAR CAMBIOS EN LA WEB</button></div>
-<div id="modal-token">
+
+<div class="modal" id="modal-token">
   <div class="modal-box">
     <h3 style="margin-top:0;">Conectar con GitHub</h3>
     <input type="text" id="input-token" placeholder="github_pat_...">
-    <button onclick="guardarToken()">Guardar y Conectar</button>
+    <div class="modal-btns">
+      <button style="background:#ea1d2c;" onclick="guardarToken()">Conectar</button>
+    </div>
   </div>
 </div>
+
+<div class="modal" id="modal-nuevo">
+  <div class="modal-box">
+    <h3 style="margin-top:0;">Agregar Plato Nuevo</h3>
+    <select id="n-cat">
+      <option value="empanadas">🥟 Empanadas</option>
+      <option value="pizzas">🍕 Pizzas al Horno</option>
+      <option value="platos">🍗 Platos Caseros</option>
+      <option value="guarniciones">🥗 Guarniciones y Postres</option>
+    </select>
+    <input type="text" id="n-nombre" placeholder="Nombre (ej: Pizza Calabresa)">
+    <input type="text" id="n-desc" placeholder="Descripción corta (ej: Muzzarella y longaniza)">
+    <input type="number" id="n-precio" placeholder="Precio (ej: 14500)">
+    <input type="text" id="n-img" placeholder="Foto (ej: pizza.jpg o link https://...)">
+    <div class="modal-btns">
+      <button style="background:#888;" onclick="cerrarNuevo()">Cancelar</button>
+      <button style="background:#00a650;" onclick="agregarPlato()">Agregar</button>
+    </div>
+  </div>
+</div>
+
 <script>
-  var API_URL = ['https:/', 'api.github.com', 'repos', 'daviddelbuono-crypto', 'DEL-HORNITO', 'contents', 'precios.txt'].join('/');
+  var API_URL = ['https:/', '://github.com', 'repos', 'daviddelbuono-crypto', 'DEL-HORNITO', 'contents', 'precios.txt'].join('/');
   var fileSha = '';
   var lineasOriginales = [];
 
   function getToken() { return (localStorage.getItem('gh_token_hornito') || '').replace(/\s+/g, ''); }
   function abrirConfig() { document.getElementById('input-token').value = getToken(); document.getElementById('modal-token').style.display = 'flex'; }
+  function abrirNuevo() { document.getElementById('modal-nuevo').style.display = 'flex'; }
+  function cerrarNuevo() { document.getElementById('modal-nuevo').style.display = 'none'; }
+
   function guardarToken() {
     var val = document.getElementById('input-token').value.replace(/\s+/g, '');
     if (val) { localStorage.setItem('gh_token_hornito', val); document.getElementById('modal-token').style.display = 'none'; cargarArchivo(); }
@@ -71,6 +105,24 @@
     .catch(function(e) { alert('Revisá el Token: ' + e.message); abrirConfig(); });
   }
 
+  function agregarPlato() {
+    var cat = document.getElementById('n-cat').value;
+    var nom = document.getElementById('n-nombre').value.trim();
+    var desc = document.getElementById('n-desc').value.trim() || 'Especialidad de la casa.';
+    var pre = document.getElementById('n-precio').value.trim();
+    var img = document.getElementById('n-img').value.trim() || 'pizza.jpg';
+    if (!nom || !pre) { alert('Completá nombre y precio'); return; }
+    var id = nom.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-');
+    var nuevaLinea = [id, pre, 'SI', img, cat, nom, desc].join(' | ');
+    lineasOriginales.push(nuevaLinea);
+    cerrarNuevo();
+    document.getElementById('n-nombre').value = '';
+    document.getElementById('n-desc').value = '';
+    document.getElementById('n-precio').value = '';
+    renderizar(lineasOriginales.join('\n'));
+    alert('Plato agregado a la lista. Tocá "GUARDAR CAMBIOS EN LA WEB" abajo para publicarlo.');
+  }
+
   function renderizar(texto) {
     var cont = document.getElementById('lista-productos');
     cont.innerHTML = '';
@@ -79,13 +131,16 @@
       var t = linea.trim();
       if (!t || t.charAt(0) === '#') return;
       var p = t.split('|').map(function(x) { return x.trim(); });
-      if (p.at(0).toLowerCase() === 'envio') {
-        cont.innerHTML += '<div class="card"><div class="info"><div class="prod-id">🛵 Envío</div><div class="precio-box">$<input type="number" class="precio-input" data-i="' + i + '" data-t="e" value="' + p.at(1) + '"></div></div></div>';
+      var c0 = p.at(0).toLowerCase();
+      if (c0 === 'envio' || c0 === 'whatsapp') {
+        var titulo = c0 === 'envio' ? '🛵 Envío ($)' : '📱 WhatsApp (549...)';
+        cont.innerHTML += '<div class="card"><div class="info"><div class="prod-id">' + titulo + '</div><div class="precio-box"><input type="text" class="precio-input" style="width:170px;" data-i="' + i + '" data-t="cfg" value="' + p.at(1) + '"></div></div></div>';
         return;
       }
       if (p.length >= 3) {
         var ok = p.at(2).toUpperCase() === 'SI';
-        cont.innerHTML += '<div class="card ' + (ok ? '' : 'inactivo') + '" id="c-' + i + '"><div class="info"><div class="prod-id">' + p.at(0).replace(/-/g, ' ') + '</div><div class="precio-box">$<input type="number" class="precio-input" data-i="' + i + '" data-t="p" value="' + p.at(1) + '"></div></div><div><label class="switch"><input type="checkbox" id="k-' + i + '" ' + (ok ? 'checked' : '') + ' onchange="tv(' + i + ')"><span class="slider"></span></label><div class="estado-txt ' + (ok ? 'txt-si' : 'txt-no') + '" id="l-' + i + '">' + (ok ? 'DISPONIBLE' : 'PAUSADO') + '</div></div></div>';
+        var nombreMostrar = p.at(5) || p.at(0).replace(/-/g, ' ');
+        cont.innerHTML += '<div class="card ' + (ok ? '' : 'inactivo') + '" id="c-' + i + '"><div class="info"><div class="prod-id">' + nombreMostrar + '</div><div class="precio-box">$<input type="number" class="precio-input" data-i="' + i + '" data-t="p" value="' + p.at(1) + '"></div></div><div><label class="switch"><input type="checkbox" id="k-' + i + '" ' + (ok ? 'checked' : '') + ' onchange="tv(' + i + ')"><span class="slider"></span></label><div class="estado-txt ' + (ok ? 'txt-si' : 'txt-no') + '" id="l-' + i + '">' + (ok ? 'DISPONIBLE' : 'PAUSADO') + '</div></div></div>';
       }
     });
   }
@@ -104,20 +159,22 @@
     document.querySelectorAll('.precio-input').forEach(function(inp) {
       var i = Number(inp.dataset.i);
       var p = lineasOriginales.at(i).split('|').map(function(x) { return x.trim(); });
-      if (inp.dataset.t === 'e') { lineasOriginales.splice(i, 1, p.at(0) + ' | ' + inp.value.trim()); }
-      else {
+      if (inp.dataset.t === 'cfg') {
+        lineasOriginales.splice(i, 1, p.at(0) + ' | ' + inp.value.trim());
+      } else {
         var act = document.getElementById('k-' + i).checked ? 'SI' : 'NO';
-        var img = p.at(3) ? (' | ' + p.at(3)) : '';
-        lineasOriginales.splice(i, 1, p.at(0) + ' | ' + inp.value.trim() + ' | ' + act + img);
+        p.splice(1, 1, inp.value.trim());
+        p.splice(2, 1, act);
+        lineasOriginales.splice(i, 1, p.join(' | '));
       }
     });
     fetch(API_URL, {
       method: 'PUT',
       headers: { 'Authorization': 'token ' + getToken(), 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Update', content: btoa(unescape(encodeURIComponent(lineasOriginales.join('\n')))), sha: fileSha })
+      body: JSON.stringify({ message: 'Update menu', content: btoa(unescape(encodeURIComponent(lineasOriginales.join('\n')))), sha: fileSha })
     })
     .then(function(r) { if (!r.ok) throw new Error('Error ' + r.status); return r.json(); })
-    .then(function(d) { fileSha = d.content.sha; alert('✅ ¡Guardado!'); })
+    .then(function(d) { fileSha = d.content.sha; alert('✅ ¡Guardado en la web!'); })
     .catch(function(e) { alert('❌ Error: ' + e.message); })
     .finally(function() { btn.disabled = false; btn.textContent = '💾 GUARDAR CAMBIOS EN LA WEB'; });
   }
