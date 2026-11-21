@@ -21,3 +21,5 @@ canelones | 9800 | SI | https://images.unsplash.com/photo-1621996346565-e3dbc646
 ensalada-rusa | 4200 | SI | https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80
 papas-horno | 4800 | SI | https://images.unsplash.com/photo-1573080496219-bb080dd4f877?auto=format&fit=crop&w=600&q=80
 flan-casero | 4500 | SI | https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&fit=crop&w=600&q=80
+
+cordero | 10000 | SI | pizza.jpg | empanadas | cordero | pata cordero
