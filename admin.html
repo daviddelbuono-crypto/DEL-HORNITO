@@ -4,26 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#ea1d2c">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
   <title>Gestión - Del Hornito</title>
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    * { box-sizing: border-box; font-family: sans-serif; }
     body { margin: 0; background: #f4f5f7; color: #222; padding-bottom: 90px; }
-    header { background: #ea1d2c; color: white; padding: 16px; position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 6px rgba(0,0,0,0.15); }
+    header { background: #ea1d2c; color: white; padding: 16px; position: sticky; top: 0; z-index: 10; display: flex; justify-content: space-between; align-items: center; }
     header h1 { margin: 0; font-size: 18px; }
-    .btn-config { background: rgba(255,255,255,0.25); border: none; color: white; padding: 8px 12px; border-radius: 6px; font-size: 14px; font-weight: bold; cursor: pointer; }
+    .btn-config { background: rgba(255,255,255,0.25); border: none; color: white; padding: 8px 12px; border-radius: 6px; font-weight: bold; }
     .container { padding: 12px; max-width: 600px; margin: auto; }
     .card { background: white; border-radius: 12px; padding: 14px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); display: flex; justify-content: space-between; align-items: center; gap: 10px; }
     .card.inactivo { opacity: 0.6; background: #fafafa; }
     .info { flex: 1; }
-    .prod-id { font-weight: 700; font-size: 15px; text-transform: uppercase; margin-bottom: 6px; color: #333; }
+    .prod-id { font-weight: 700; font-size: 15px; text-transform: uppercase; margin-bottom: 6px; }
     .precio-box { display: flex; align-items: center; gap: 4px; }
-    .precio-box span { font-weight: bold; color: #555; font-size: 16px; }
     .precio-input { width: 110px; padding: 8px; font-size: 16px; font-weight: bold; border: 1px solid #ccc; border-radius: 8px; }
-    .switch { position: relative; display: inline-block; width: 64px; height: 34px; flex-shrink: 0; }
+    .switch { position: relative; display: inline-block; width: 64px; height: 34px; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 34px; }
+    .slider { position: absolute; cursor: pointer; inset: 0; background-color: #ccc; transition: .3s; border-radius: 34px; }
     .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 4px; bottom: 4px; background-color: white; transition: .3s; border-radius: 50%; }
     input:checked + .slider { background-color: #00a650; }
     input:checked + .slider:before { transform: translateX(30px); }
@@ -31,227 +28,99 @@
     .txt-si { color: #00a650; }
     .txt-no { color: #d93025; }
     .footer-bar { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 12px 16px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); display: flex; justify-content: center; }
-    .btn-guardar { background: #00a650; color: white; border: none; width: 100%; max-width: 600px; padding: 15px; font-size: 17px; font-weight: bold; border-radius: 10px; cursor: pointer; }
-    .btn-guardar:disabled { background: #999; }
+    .btn-guardar { background: #00a650; color: white; border: none; width: 100%; max-width: 600px; padding: 15px; font-size: 17px; font-weight: bold; border-radius: 10px; }
     #modal-token { position: fixed; inset: 0; background: rgba(0,0,0,0.75); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 20; }
     .modal-box { background: white; padding: 20px; border-radius: 12px; width: 100%; max-width: 400px; }
-    .modal-box input { width: 100%; padding: 12px; margin: 12px 0; border: 1px solid #ccc; border-radius: 8px; font-size: 14px; }
-    .modal-box button { width: 100%; padding: 12px; background: #ea1d2c; color: white; border: none; border-radius: 8px; font-weight: bold; font-size: 16px; }
+    .modal-box input { width: 100%; padding: 12px; margin: 12px 0; border: 1px solid #ccc; border-radius: 8px; }
+    .modal-box button { width: 100%; padding: 12px; background: #ea1d2c; color: white; border: none; border-radius: 8px; font-weight: bold; }
   </style>
 </head>
 <body>
-
 <header>
   <h1>🔥 DEL HORNITO - Panel</h1>
-  <button class="btn-config" id="btn-token">⚙️ Token</button>
+  <button class="btn-config" onclick="abrirConfig()">⚙️ Token</button>
 </header>
-
-<div class="container" id="lista-productos">
-  <p style="text-align:center; color:#666;">Cargando catálogo...</p>
-</div>
-
-<div class="footer-bar">
-  <button class="btn-guardar" id="btn-guardar">💾 GUARDAR CAMBIOS EN LA WEB</button>
-</div>
-
+<div class="container" id="lista-productos"><p style="text-align:center;">Cargando...</p></div>
+<div class="footer-bar"><button class="btn-guardar" id="btn-guardar" onclick="guardarCambios()">💾 GUARDAR CAMBIOS EN LA WEB</button></div>
 <div id="modal-token">
   <div class="modal-box">
     <h3 style="margin-top:0;">Conectar con GitHub</h3>
-    <p style="font-size:13px; color:#555;">Pegá tu Token de acceso para habilitar la edición desde este celular:</p>
     <input type="text" id="input-token" placeholder="github_pat_...">
-    <button id="btn-conectar">Guardar y Conectar</button>
+    <button onclick="guardarToken()">Guardar y Conectar</button>
   </div>
 </div>
-
 <script>
-  var OWNER = 'daviddelbuono-crypto';
-  var REPO = 'DEL-HORNITO';
-  var FILE_PATH = 'precios.txt';
+  var API_URL = ['https:/', 'api.github.com', 'repos', 'daviddelbuono-crypto', 'DEL-HORNITO', 'contents', 'precios.txt'].join('/');
   var fileSha = '';
   var lineasOriginales = [];
 
-  function getToken() {
-    return (localStorage.getItem('gh_token_hornito') || '').replace(/\s+/g, '');
-  }
-
-  function abrirConfig() {
-    document.getElementById('input-token').value = getToken();
-    document.getElementById('modal-token').style.display = 'flex';
-  }
-
+  function getToken() { return (localStorage.getItem('gh_token_hornito') || '').replace(/\s+/g, ''); }
+  function abrirConfig() { document.getElementById('input-token').value = getToken(); document.getElementById('modal-token').style.display = 'flex'; }
   function guardarToken() {
     var val = document.getElementById('input-token').value.replace(/\s+/g, '');
-    if (val) {
-      localStorage.setItem('gh_token_hornito', val);
-      document.getElementById('modal-token').style.display = 'none';
-      cargarArchivo();
-    }
+    if (val) { localStorage.setItem('gh_token_hornito', val); document.getElementById('modal-token').style.display = 'none'; cargarArchivo(); }
   }
-
-  document.getElementById('btn-token').addEventListener('click', abrirConfig);
-  document.getElementById('btn-conectar').addEventListener('click', guardarToken);
-  document.getElementById('btn-guardar').addEventListener('click', guardarCambios);
 
   function cargarArchivo() {
     var token = getToken();
     if (!token) { abrirConfig(); return; }
-
-    document.getElementById('lista-productos').innerHTML = '<p style="text-align:center; color:#666;">Conectando con GitHub...</p>';
-
-    fetch('https://github.com' + OWNER + '/' + REPO + '/contents/' + FILE_PATH, {
-      cache: 'no-store',
-      headers: {
-        'Authorization': 'token ' + token,
-        'Accept': 'application/vnd.github.v3+json'
-      }
-    })
-    .then(function(res) {
-      if (!res.ok) {
-        throw new Error('Error ' + res.status + ' al conectar. Revisá el Token.');
-      }
-      return res.json();
-    })
-    .then(function(data) {
-      fileSha = data.sha;
-      var contenido = decodeURIComponent(escape(atob(data.content.replace(/\n/g, ''))));
-      renderizar(contenido);
-    })
-    .catch(function(e) {
-      document.getElementById('lista-productos').innerHTML = '<p style="text-align:center; color:#d93025; font-weight:bold;">' + e.message + '</p>';
-      abrirConfig();
-    });
+    fetch(API_URL, { cache: 'no-store', headers: { 'Authorization': 'token ' + token } })
+    .then(function(r) { if (!r.ok) throw new Error('Error ' + r.status); return r.json(); })
+    .then(function(d) { fileSha = d.sha; renderizar(decodeURIComponent(escape(atob(d.content.replace(/\n/g, ''))))); })
+    .catch(function(e) { alert('Revisá el Token: ' + e.message); abrirConfig(); });
   }
 
   function renderizar(texto) {
-    var contenedor = document.getElementById('lista-productos');
-    contenedor.innerHTML = '';
+    var cont = document.getElementById('lista-productos');
+    cont.innerHTML = '';
     lineasOriginales = texto.split('\n');
-
-    lineasOriginales.forEach(function(linea, index) {
-      var trim = linea.trim();
-      if (!trim || trim.charAt(0) === '#') return;
-
-      var partes = trim.split('|').map(function(p) { return p.trim(); });
-      var col0 = partes.at(0) || '';
-      var col1 = partes.at(1) || '';
-      var col2 = partes.at(2) || '';
-      
-      if (col0.toLowerCase() === 'envio') {
-        contenedor.innerHTML += '<div class="card" style="border-left: 4px solid #ff9800;">' +
-          '<div class="info">' +
-          '<div class="prod-id">🛵 Costo de Envío</div>' +
-          '<div class="precio-box"><span>$</span>' +
-          '<input type="number" class="precio-input" data-index="' + index + '" data-tipo="envio" value="' + col1 + '">' +
-          '</div></div></div>';
+    lineasOriginales.forEach(function(linea, i) {
+      var t = linea.trim();
+      if (!t || t.charAt(0) === '#') return;
+      var p = t.split('|').map(function(x) { return x.trim(); });
+      if (p.at(0).toLowerCase() === 'envio') {
+        cont.innerHTML += '<div class="card"><div class="info"><div class="prod-id">🛵 Envío</div><div class="precio-box">$<input type="number" class="precio-input" data-i="' + i + '" data-t="e" value="' + p.at(1) + '"></div></div></div>';
         return;
       }
-
-      if (partes.length >= 3) {
-        var disponible = col2.toUpperCase() === 'SI';
-        var claseCard = disponible ? 'card' : 'card inactivo';
-        var checkedAttr = disponible ? 'checked' : '';
-        var claseTxt = disponible ? 'estado-txt txt-si' : 'estado-txt txt-no';
-        var textoEstado = disponible ? 'DISPONIBLE' : 'PAUSADO';
-
-        contenedor.innerHTML += '<div class="' + claseCard + '" id="card-' + index + '">' +
-          '<div class="info">' +
-          '<div class="prod-id">' + col0.replace(/-/g, ' ') + '</div>' +
-          '<div class="precio-box"><span>$</span>' +
-          '<input type="number" class="precio-input" data-index="' + index + '" data-tipo="prod" value="' + col1 + '">' +
-          '</div></div>' +
-          '<div><label class="switch">' +
-          '<input type="checkbox" id="chk-' + index + '" ' + checkedAttr + ' onchange="toggleVisual(' + index + ')">' +
-          '<span class="slider"></span></label>' +
-          '<div class="' + claseTxt + '" id="lbl-' + index + '">' + textoEstado + '</div>' +
-          '</div></div>';
+      if (p.length >= 3) {
+        var ok = p.at(2).toUpperCase() === 'SI';
+        cont.innerHTML += '<div class="card ' + (ok ? '' : 'inactivo') + '" id="c-' + i + '"><div class="info"><div class="prod-id">' + p.at(0).replace(/-/g, ' ') + '</div><div class="precio-box">$<input type="number" class="precio-input" data-i="' + i + '" data-t="p" value="' + p.at(1) + '"></div></div><div><label class="switch"><input type="checkbox" id="k-' + i + '" ' + (ok ? 'checked' : '') + ' onchange="tv(' + i + ')"><span class="slider"></span></label><div class="estado-txt ' + (ok ? 'txt-si' : 'txt-no') + '" id="l-' + i + '">' + (ok ? 'DISPONIBLE' : 'PAUSADO') + '</div></div></div>';
       }
     });
   }
 
-  function toggleVisual(index) {
-    var chk = document.getElementById('chk-' + index);
-    var card = document.getElementById('card-' + index);
-    var lbl = document.getElementById('lbl-' + index);
-    if (chk.checked) {
-      card.classList.remove('inactivo');
-      lbl.textContent = 'DISPONIBLE';
-      lbl.className = 'estado-txt txt-si';
-    } else {
-      card.classList.add('inactivo');
-      lbl.textContent = 'PAUSADO';
-      lbl.className = 'estado-txt txt-no';
-    }
+  function tv(i) {
+    var k = document.getElementById('k-' + i).checked;
+    document.getElementById('c-' + i).className = k ? 'card' : 'card inactivo';
+    var l = document.getElementById('l-' + i);
+    l.textContent = k ? 'DISPONIBLE' : 'PAUSADO';
+    l.className = 'estado-txt ' + (k ? 'txt-si' : 'txt-no');
   }
 
   function guardarCambios() {
     var btn = document.getElementById('btn-guardar');
-    btn.disabled = true;
-    btn.textContent = '⏳ Guardando...';
-
-    var inputs = document.querySelectorAll('.precio-input');
-    inputs.forEach(function(inp) {
-      var idx = Number(inp.dataset.index);
-      var tipo = inp.dataset.tipo;
-      var nuevoPrecio = inp.value.trim();
-      var partes = lineasOriginales.at(idx).split('|').map(function(p) { return p.trim(); });
-      var col0 = partes.at(0) || '';
-      var col3 = partes.at(3) || '';
-
-      if (tipo === 'envio') {
-        lineasOriginales.splice(idx, 1, col0 + ' | ' + nuevoPrecio);
-      } else {
-        var activo = document.getElementById('chk-' + idx).checked ? 'SI' : 'NO';
-        var img = col3 ? (' | ' + col3) : '';
-        lineasOriginales.splice(idx, 1, col0 + ' | ' + nuevoPrecio + ' | ' + activo + img);
+    btn.disabled = true; btn.textContent = '⏳ Guardando...';
+    document.querySelectorAll('.precio-input').forEach(function(inp) {
+      var i = Number(inp.dataset.i);
+      var p = lineasOriginales.at(i).split('|').map(function(x) { return x.trim(); });
+      if (inp.dataset.t === 'e') { lineasOriginales.splice(i, 1, p.at(0) + ' | ' + inp.value.trim()); }
+      else {
+        var act = document.getElementById('k-' + i).checked ? 'SI' : 'NO';
+        var img = p.at(3) ? (' | ' + p.at(3)) : '';
+        lineasOriginales.splice(i, 1, p.at(0) + ' | ' + inp.value.trim() + ' | ' + act + img);
       }
     });
-
-    var nuevoContenido = lineasOriginales.join('\n');
-    var contentBase64 = btoa(unescape(encodeURIComponent(nuevoContenido)));
-
-    fetch('https://github.com' + OWNER + '/' + REPO + '/contents/' + FILE_PATH, {
+    fetch(API_URL, {
       method: 'PUT',
-      headers: {
-        'Authorization': 'token ' + getToken(),
-Usa el código con precaución.
-'Content-Type': 'application/json'
-},
-body: JSON.stringify({
-message: 'Actualización de precios/stock desde App Móvil',
-content: contentBase64,
-sha: fileSha
-})
-})
-.then(function(res) {
-if (!res.ok) {
-throw new Error('Error ' + res.status + ' al guardar en GitHub.');
-}
-return res.json();
-})
-.then(function(data) {
-fileSha = data.content.sha;
-alert('✅ ¡Listo! Precios y stock actualizados. En 1 minuto se ven en la web.');
-})
-.catch(function(e) {
-alert('❌ Error al guardar: ' + e.message);
-})
-.finally(function() {
-btn.disabled = false;
-btn.textContent = '💾 GUARDAR CAMBIOS EN LA WEB';
-});
-}
-cargarArchivo();
-
-
-
-### Pasos para actualizarlo:
-1. Abrí **`admin.html`** en tu GitHub → tocá el **lápiz (Editar)** → borrá todo y pegá este código limpio.
-2. Tocá **Guardar cambios (Commit changes)**.
-3. Esperá 1 minuto y entrá desde el celular a:
-   👉 **[https://del-hornito.pages.dev/admin.html?v=4](https://del-hornito.pages.dev/admin.html?v=4)**
-
-Ahora sí no tiene ningún carácter especial que se pierda al copiar y el botón **`⚙️ Token`** te abre al instante.
-
-<FollowUp>
-Reemplazá el código en **`admin.html`**, abrí el enlace con **`?v=4`** y contame si ya te abre el cuadro para pegar el Token y carga tus productos.
-</FollowUp>
+      headers: { 'Authorization': 'token ' + getToken(), 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'Update', content: btoa(unescape(encodeURIComponent(lineasOriginales.join('\n')))), sha: fileSha })
+    })
+    .then(function(r) { if (!r.ok) throw new Error('Error ' + r.status); return r.json(); })
+    .then(function(d) { fileSha = d.content.sha; alert('✅ ¡Guardado!'); })
+    .catch(function(e) { alert('❌ Error: ' + e.message); })
+    .finally(function() { btn.disabled = false; btn.textContent = '💾 GUARDAR CAMBIOS EN LA WEB'; });
+  }
+  cargarArchivo();
+</script>
+</body>
+</html>
